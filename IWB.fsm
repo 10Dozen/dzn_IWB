@@ -1,0 +1,334 @@
+/*%FSM<COMPILE "E:\GMZ\STEAM\SteamApps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, IWB">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start",0,250,-50.000000,-1125.000000,50.000000,-1075.000000,0.000000,"Start"};
+item1[] = {"Timer",4,218,-50.000000,-1025.000000,50.000000,-975.000000,1.000000,"Timer"};
+item2[] = {"",7,210,-254.000000,-404.000000,-246.000000,-396.000000,0.000000,""};
+item3[] = {"",7,210,-254.000000,-854.000000,-246.000000,-846.000000,0.000000,""};
+item4[] = {"",7,210,-254.000000,-1004.000000,-246.000000,-996.000000,0.000000,""};
+item5[] = {"",7,210,196.000000,-779.000000,204.000015,-771.000000,0.000000,""};
+item6[] = {"",7,210,196.000000,-479.000000,204.000000,-471.000000,0.000000,""};
+item7[] = {"Get_Attributes",2,250,-50.000000,-950.000000,50.000000,-900.000000,0.000000,"Get Attributes"};
+item8[] = {"Get_Fire__Attrib",2,250,-50.000000,-800.000000,50.000000,-750.000000,0.000000,"Get Fire " \n "Attributes"};
+item9[] = {"Short_Timer",4,218,-50.000000,-875.000000,50.000000,-825.000000,0.000000,"Short Timer"};
+item10[] = {"UGL",4,218,-175.000000,-700.000000,-75.000000,-650.000000,3.000000,"UGL"};
+item11[] = {"Hand_Grenade",4,218,-50.000000,-700.000000,50.000000,-650.000000,2.000000,"Hand Grenade"};
+item12[] = {"Launcher",4,218,75.000000,-700.000000,175.000000,-650.000000,1.000000,"Launcher"};
+item13[] = {"UGL_Attack",2,250,-175.000000,-625.000000,-75.000000,-575.000000,0.000000,"UGL Attack"};
+item14[] = {"HG_Attack",2,250,-50.000000,-625.000000,50.000000,-575.000000,0.000000,"HG Attack"};
+item15[] = {"Launcher_Attack",2,250,75.000000,-625.000000,175.000000,-575.000000,0.000000,"Launcher" \n "Attack"};
+item16[] = {"Nah___",4,218,-50.000000,-500.000000,50.000000,-450.000000,0.000000,"Nah..."};
+item17[] = {"Set_Loop_Timer",2,250,-50.000000,-425.000000,50.000000,-375.000000,0.000000,"Set Loop" \n "Timer"};
+item18[] = {"Dead",4,218,200.000000,-950.000000,300.000000,-900.000000,9.000000,"Dead"};
+item19[] = {"End",1,250,325.000000,-950.000000,425.000000,-900.000000,0.000000,"End"};
+item20[] = {"____FAKE____",9,8241384,2515845270571535000000000000000000.000000,0.000000,0.000000,0.000000,0.000000,"____FAKE____"};
+link0[] = {0,1};
+link1[] = {1,7};
+link2[] = {2,3};
+link3[] = {3,4};
+link4[] = {3,9};
+link5[] = {4,1};
+link6[] = {5,6};
+link7[] = {6,16};
+link8[] = {7,9};
+link9[] = {7,18};
+link10[] = {8,5};
+link11[] = {8,10};
+link12[] = {8,18};
+link13[] = {9,8};
+link14[] = {10,13};
+link15[] = {11,14};
+link16[] = {12,15};
+link17[] = {13,16};
+link18[] = {16,17};
+link19[] = {17,2};
+link20[] = {18,19};
+link21[] = {20,11};
+link22[] = {20,12};
+globals[] = {0.000000,0,0,0,0,640,480,1,290,6316128,1,-608.063965,646.648071,-213.148926,-1314.756348,989,885,1};
+window[] = {2,-1,-1,-32000,-32000,999,494,1832,238,3,1007};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "IWB";
+        class States
+        {
+                /*%FSM<STATE "Start">*/
+                class Start
+                {
+                        name = "Start";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"private[" \n
+                         "	""_unit""	" \n
+                         "	,""_tgtConditions"",""_tgt"",""_attack"",""_mode""" \n
+                         "	,""_debug""" \n
+                         "	,""_longTimer"",""_shortTimer""" \n
+                         "];" \n
+                         "" \n
+                         "_unit = _this;" \n
+                         "_debug = false;" \n
+                         "" \n
+                         "_unit call dzn_fnc_iwb_setLongTimeout;" \n
+                         "" \n
+                         "if (_debug) then { systemChat ""IWB (0) started""; };"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Timer">*/
+                                class Timer
+                                {
+                                        itemno = 1;
+                                        priority = 1.000000;
+                                        to="Get_Attributes";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getLongTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Get_Attributes">*/
+                class Get_Attributes
+                {
+                        name = "Get_Attributes";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (1) Get Attributes""; };" \n
+                         "" \n
+                         "_unit call dzn_fnc_iwb_GetUnitCombatAttributes;" \n
+                         "" \n
+                         "_unit call dzn_fnc_iwb_setLongTimeout;" \n
+                         "_unit call dzn_fnc_iwb_setShortTimeout;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dead">*/
+                                class Dead
+                                {
+                                        itemno = 18;
+                                        priority = 9.000000;
+                                        to="End";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Short_Timer">*/
+                                class Short_Timer
+                                {
+                                        itemno = 9;
+                                        priority = 0.000000;
+                                        to="Get_Fire__Attrib";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Get_Fire__Attrib">*/
+                class Get_Fire__Attrib
+                {
+                        name = "Get_Fire__Attrib";
+                        itemno = 8;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (2) Getting fire attributes""; };" \n
+                         "" \n
+                         "_tgtConditions = _unit call dzn_fnc_iwb_SelectAttackAndTarget;" \n
+                         "" \n
+                         "_attack = _tgtConditions select 0;" \n
+                         "_unit setVariable [""IWB_Attack"", _tgtConditions];" \n
+                         "" \n
+                         "if (_attack) then {" \n
+                         "	_tgt = _tgtConditions select 1;" \n
+                         "	_mode = _tgtConditions select 2;" \n
+                         "	" \n
+                         "	if (_debug) then { systemChat format [""IWB (2.1) Prepare to attack %1 with %2"",_tgt,_mode]; };" \n
+                         "} else {" \n
+                         "	if (_debug) then { systemChat ""IWB (2.1) No attack""; };" \n
+                         "};" \n
+                         "" \n
+                         "_unit call dzn_fnc_iwb_setShortTimeout;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dead">*/
+                                class Dead
+                                {
+                                        itemno = 18;
+                                        priority = 9.000000;
+                                        to="End";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "UGL">*/
+                                class UGL
+                                {
+                                        itemno = 10;
+                                        priority = 3.000000;
+                                        to="UGL_Attack";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""IWB_UGL"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "UGL_Attack">*/
+                class UGL_Attack
+                {
+                        name = "UGL_Attack";
+                        itemno = 13;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (3) Attacking UGL""; };" \n
+                         "" \n
+                         "[_unit, _tgt] spawn dzn_fnc_iwb_UGLAttack;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "HG_Attack">*/
+                class HG_Attack
+                {
+                        name = "HG_Attack";
+                        itemno = 14;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""ICB (3) Attacking HG""; };" \n
+                         "" \n
+                         "[_unit, _tgt] spawn dzn_fnc_icb_HandGrenadeAttack;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Launcher_Attack">*/
+                class Launcher_Attack
+                {
+                        name = "Launcher_Attack";
+                        itemno = 15;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""ICB (3) Attacking Launcher""; };" \n
+                         "" \n
+                         "[_unit, _tgt] spawn dzn_fnc_icb_LauncherAttack;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Set_Loop_Timer">*/
+                class Set_Loop_Timer
+                {
+                        name = "Set_Loop_Timer";
+                        itemno = 17;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (5) Sequence done""; };" \n
+                         "" \n
+                         "_unit call dzn_fnc_iwb_setShortTimeout;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Timer">*/
+                                class Timer
+                                {
+                                        itemno = 1;
+                                        priority = 1.000000;
+                                        to="Get_Attributes";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getLongTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Short_Timer">*/
+                                class Short_Timer
+                                {
+                                        itemno = 9;
+                                        priority = 0.000000;
+                                        to="Get_Fire__Attrib";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_iwb_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "End">*/
+                class End
+                {
+                        name = "End";
+                        itemno = 19;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "____FAKE____">*/
+                class ____FAKE____
+                {
+                        name = "____FAKE____";
+                        itemno = 20;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Hand_Grenade">*/
+                                class Hand_Grenade
+                                {
+                                        itemno = 11;
+                                        priority = 2.000000;
+                                        to="HG_Attack";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""ICB_Grenades"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Launcher">*/
+                                class Launcher
+                                {
+                                        itemno = 12;
+                                        priority = 1.000000;
+                                        to="Launcher_Attack";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""ICB_Launcher"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start";
+        finalStates[] =
+        {
+                "End",
+        };
+};
+/*%FSM</COMPILE>*/
