@@ -99,7 +99,7 @@ dzn_fnc_iwb_GetTargets = {
 			}		
 		);
 	} forEach [ 
-		[25, 200]
+		dzn_iwb_UGLAttackRange
 	];
 	
 	_filteredTargets
@@ -109,6 +109,15 @@ dzn_fnc_iwb_GetTargets = {
 /**
 	Attack Sequences
  **/
+dzn_fnc_iwb_runAttackSequenceRemote = {
+	params ["_u", "_sequenceParams", "_sequenceName"];
+	
+	private _seqFunction = switch toUpper(_sequenceName) do {
+		case "UGL": { "dzn_fnc_iwb_UGLAttack" };
+	};
+	
+	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
+};
 
 dzn_fnc_iwb_UGLAttack = {
 	params["_u","_tgt"];
@@ -116,7 +125,7 @@ dzn_fnc_iwb_UGLAttack = {
 	private _priWpn = primaryWeapon _u;
 	if (_priWpn == "") exitWith { systemChat "No Primary weapon"; };
 	
-	_u setVariable ["IWB_inSequence", true];
+	_u setVariable ["IWB_inSequence", true, true];
 	_u doWatch _tgt;
 	
 	if (DEBUG) then { systemChat "Attacking with UGL!"; };	
@@ -129,7 +138,7 @@ dzn_fnc_iwb_UGLAttack = {
 		if (DEBUG) then { systemChat "No GL ammo!"; };	
 		
 		_u selectWeapon _priWpn;
-		_u setVariable ["IWB_inSequence", false];
+		_u setVariable ["IWB_inSequence", false, true];
 		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
 	};
 	
@@ -154,100 +163,7 @@ dzn_fnc_iwb_UGLAttack = {
 	_u addMagazines [_mainMag, _magCount];
 	_u setAmmo [_priWpn, _curMagAmmo];
 	
-	_u setVariable ["IWB_inSequence", false];
+	_u setVariable ["IWB_inSequence", false, true];
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
-
-///////
-dzn_fnc_convertInventoryToLine = {
-	// @InventoryArray call dzn_fnc_convertInventoryToLine
-	private["_line","_cat","_subCat"];
-	#define	linePush(X)		if (_x != "") then {_line pushBack X;};
-	_line = [];
-	{
-		_cat = _x;
-		if (typename _cat == "ARRAY") then {
-			{
-				_subCat = _x;
-				if (typename _subCat == "ARRAY") then {
-					{
-						linePush(_x)
-					} forEach _subCat;
-				} else {
-					linePush(_x)
-				};
-			} forEach _cat;
-		} else {
-			linePush(_x)
-		};
-	} forEach _this;
-	
-	_line
-};
-
-dzn_fnc_showGearTotals = {
-	// @ArrayOfTotals call dzn_fnc_gear_editMode_showGearTotals	
-	private["_inv","_items","_stringsToShow","_itemName","_headlineItems","_haedlines"];
-	
-	_inv = _this call BIS_fnc_saveInventory;
-	_items = (_inv call dzn_fnc_convertInventoryToLine) call BIS_fnc_consolidateArray;
-	
-	_stringsToShow = [
-		parseText "<t color='#FFD000' size='1' align='center'>GEAR TOTALS</t>"
-	];
-	
-	_headlineItems = [
-		(_inv select 0 select 0) call dzn_fnc_getItemDisplayName
-		, (_inv select 1 select 0) call dzn_fnc_getItemDisplayName
-		, (_inv select 2 select 0) call dzn_fnc_getItemDisplayName
-		, (_inv select 3) call dzn_fnc_getItemDisplayName
-		, (_inv select 4) call dzn_fnc_getItemDisplayName
-		, (_inv select 6 select 0) call dzn_fnc_getItemDisplayName
-		, (_inv select 7 select 0) call dzn_fnc_getItemDisplayName
-		, (_inv select 8 select 0) call dzn_fnc_getItemDisplayName		
-	];
-	
-	_haedlines = [
-		["Uniform:", 	'#3F738F']
-		,["Vest:", 		'#3F738F']
-		,["Backpack:", 	'#3F738F']
-		,["Headgear:", 	'#3F738F']
-		,["Goggles:", 	'#3F738F']
-		,["Primary:", 	'#059CED']
-		,["Secondary:", 	'#059CED']
-		,["Handgun:", 	'#059CED']
-	];	
-	
-	{
-		_stringsToShow = _stringsToShow + [
-			parseText (format [
-				"<t color='%2' align='left' size='0.8'>%1</t><t align='right' size='0.8'>%3</t>"
-				, toUpper(_x select 0)
-				, _x select 1
-				, if ((_headlineItems select _forEachIndex) == "") then {"-no-"} else {_headlineItems select _forEachIndex}
-			])		
-		];		
-	} forEach _haedlines;	
-	
-	{
-		
-		_itemName = (_x select 0) call dzn_fnc_getItemDisplayName;
-		if !(_itemName in _headlineItems) then {
-			_stringsToShow = _stringsToShow + [
-				if (_x select 1 > 1) then {
-					parseText (format ["<t color='#AAAAAA' align='left' size='0.8'>x%1 %2</t>", _x select 1, _itemName])
-				} else {
-					parseText (format ["<t color='#AAAAAA' align='left' size='0.8'>%1</t>", _itemName])
-				}
-			];
-		};		
-	} forEach _items;
-
-	[
-		_stringsToShow
-		, [35.2,-7.1, 35, 0.03]
-		, dzn_gear_GearTotalsBG_RGBA
-		, dzn_gear_editMode_arsenalTimerPause
-	] call dzn_fnc_ShowMessage;
-};
