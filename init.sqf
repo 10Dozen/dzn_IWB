@@ -3,11 +3,13 @@
  *	v.1
  */
  
-call compile preProcessFileLineNumbers "\dzn_IWB\fn.sqf";
+
 if !(isServer) exitWith {};
 
 dzn_iwb_Enabled = profileNamespace getVariable ["IWB_Enabled", true];
 if (!dzn_iwb_Enabled) exitWith {};
+
+dzn_iwb_CheckUnitLoopTimeout 		= profileNamespace getVariable ["IWB_UnitCheckTimeout", 45];
 
 dzn_iwb_SpecialAttackChance 		= profileNamespace getVariable ["IWB_AttackChance", 90];
 dzn_iwb_SpecialAttackLongTimeout 	= profileNamespace getVariable ["IWB_LongTimer", 40];
@@ -33,13 +35,16 @@ dzn_iwb_UGLRoundsList = profileNamespace getVariable ["IWB_UGLRoundsList", [
 	,"CUP_1Rnd_HEDP_M203"
 ]];
 
-publicVariable "dzn_iwb_UGLRoundsList";
+call compile preProcessFileLineNumbers "\dzn_IWB\fn.sqf";
 
+publicVariable "dzn_iwb_UGLRoundsList";
+publicVariable "dzn_fnc_iwb_GetUnitCombatAttributes";
+publicVariable "dzn_fnc_iwb_UGLAttack ";
 
 [] spawn {
 	waitUntil { time > 0 };
 	
-	sleep 2;
+	sleep 10;
 	
 	dzn_iwb_CheckUnits = true;
 	dzn_fnc_iwb_CheckUnits = {
@@ -56,7 +61,7 @@ publicVariable "dzn_iwb_UGLRoundsList";
 			sleep 1;
 		} forEach _allUnits;
 		
-		sleep 45;
+		sleep dzn_iwb_CheckUnitLoopTimeout;
 		dzn_iwb_CheckUnits = true;
 	};
 	
