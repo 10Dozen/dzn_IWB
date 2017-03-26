@@ -16,6 +16,6 @@ class Extended_PostInit_EventHandlers
 {
 	class dzn_IWB
 	{
-		clientInit = "call ('\dzn_IWB\init.sqf' call SLX_XEH_COMPILE)";
+		serverInit = "call ('\dzn_IWB\init.sqf' call SLX_XEH_COMPILE)";
 	};
 };
