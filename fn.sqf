@@ -86,7 +86,7 @@ dzn_fnc_iwb_GetTargets = {
 	private _u = _this;
 	
 	private _filteredTargets = [];
-	private _targets = _u targetsQuery [objNull, sideUnknown, "", [], 0];
+	private _targets = _u targetsQuery [objNull, sideEnemy, "", [], 0];
 	//	[1,gl1,GUER,"I_Soldier_GL_F",[6750.39,5563.42],-1]
 	
 	{
