@@ -96,6 +96,7 @@ dzn_fnc_iwb_GetTargets = {
 				(_x select 3) isKindOf "CAManBase" 
 				&& _u distance (_x select 1) >= (_rng select 0)
 				&& _u distance (_x select 1) <= (_rng select 1)
+				&& !((side _x) in [side _u, civilian])
 			}		
 		);
 	} forEach [ 
