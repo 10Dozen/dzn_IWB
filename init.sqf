@@ -15,7 +15,7 @@ dzn_iwb_SpecialAttackChance 		= profileNamespace getVariable ["IWB_AttackChance"
 dzn_iwb_SpecialAttackLongTimeout 	= profileNamespace getVariable ["IWB_LongTimer", 40];
 dzn_iwb_SpecialAttackShortTimeout	= profileNamespace getVariable ["IWB_ShortTimer", 5];
 
-dzn_iwb_UGLAttackRange = profileNamespace getVariable ["IWB_UGLAttackRange", [25, 275]];
+dzn_iwb_UGLAttackRange = profileNamespace getVariable ["IWB_UGLAttackRange", [25, 300]];
 
 dzn_iwb_UGLRoundsList = profileNamespace getVariable ["IWB_UGLRoundsList", [
 	"1Rnd_HE_Grenade_shell"
