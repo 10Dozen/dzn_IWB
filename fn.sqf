@@ -71,14 +71,7 @@ dzn_fnc_iwb_GetUnitCombatAttributes = {
 	private _u = _this;
 	private _hasUGL = false;
 	private _hasGrenades = false;
-	
-	private _mags = itemsWithMagazines _u;	
-	{ 
-		if ((_x select 0) in _mags) exitWith { 
-			_u setVariable ["IWB_HGMuzzle", _x select 1, true];
-			_hasGrenades = true;
-		};
-	} forEach dzn_iwb_HGList;
+	private _hasSupportWeapon = false;
 	
 	private _muzzles = (getArray(configFile >> "cfgWeapons" >> primaryWeapon _u >> "muzzles")) - ["SAFE"];
 	if ( 
@@ -89,8 +82,20 @@ dzn_fnc_iwb_GetUnitCombatAttributes = {
 		_hasUGL = true;
 	};
 	
+	private _mags = itemsWithMagazines _u;	
+	{ 
+		if ((_x select 0) in _mags) exitWith { 
+			_u setVariable ["IWB_HGMuzzle", _x select 1, true];
+			_hasGrenades = true;
+		};
+	} forEach dzn_iwb_HGList;
+	
+	_hasSupportWeapon = getNumber (configFile >> "CfgMagazines" >> currentMagazine _u >> "count") > 30;
+	
+	
 	_u setVariable ["IWB_UGL", _hasUGL, true];
 	_u setVariable ["IWB_HG", _hasGrenades, true];
+	_u setVariable ["IWB_SW", _hasSupportWeapon, true];
 };
 
 dzn_fnc_iwb_SelectAttackAndTarget = {
@@ -113,7 +118,7 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		NO_ATTACK
 	};
 	
-	private _modes = ["IWB_UGL","IWB_HG"] select { _u getVariable [_x, false] };
+	private _modes = ["IWB_UGL","IWB_HG","IWB_SW"] select { _u getVariable [_x, false] };
 	if (_modes isEqualTo []) exitWith {  
 		if (DEBUG) then { systemChat format ["SelectAttack: No modes available ( %1 )", _modes]; };
 		NO_ATTACK
@@ -141,6 +146,12 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		[true, _tgt, "IWB_HG"]
 	};
 	
+	if (IN_MODES("IWB_SW") && { HAS_TGTS(1) }) exitWith {	
+		private _tgt = GET_TGT(1);
+		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_SW ( %1 )", _tgt]; };
+		[true, _tgt, "IWB_SW"]
+	};
+	
 	NO_ATTACK
 };
 
@@ -164,6 +175,7 @@ dzn_fnc_iwb_GetTargets = {
 	} forEach [ 
 		dzn_iwb_UGLAttackRange
 		, dzn_iwb_HGAttackRange
+		, dzn_iwb_SWAttackRange
 	];
 	
 	_filteredTargets
