@@ -2,6 +2,7 @@
 Arma 3 Infantry Weapon Behaviour tweak
 
 Task:
-  - [] Do not check cahced units
-  - [] Add Hand Grenade sequence
-  - [] Add Supressive fire sequence
+  - [IN TEST] Do not check cahced units
+  - [IN TEST] Add Hand Grenade sequence
+  - [IN TEST] Add Supressive fire sequence
+  - [IN TEST] Add move to cover behavior
