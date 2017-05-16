@@ -21,7 +21,47 @@ dzn_fnc_iwb_setShortTimeout = {
 
 dzn_fnc_iwb_getShortTimeoutDone = { _this getVariable ["IWB_ShortTimeoutDone",false] };
 dzn_fnc_iwb_getLongTimeoutDone = { _this getVariable ["IWB_LongTimeoutDone",false] };
-
+dzn_fnc_IWB_ToggleHandGrenadeEH = {
+	params ["_u", "_add"];
+	private _eh = -1;
+	
+	if (!local _u) exitWith {
+		_this remoteExec ["dzn_fnc_IWB_ToggleHandGrenadeEH", _u];
+	};
+	
+	if (_add) then {
+		_eh = _u addEventHandler [
+			"Fired"
+			, {
+				if !( (_this select 5) in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {};
+				
+				private _proj = _this select 6;
+				private _dist = (_this select 0) getVariable ["IWB_HG_TargetRange", 15];
+				private _velocity = [];
+				
+				if (_dist < 16) then {
+					_velocity = [0,8 + random [-0.75, 0, 0.75] ,10];
+				} else {				
+					if (_dist < 23) then {
+						_velocity = [0,10 + random [-1, 0, 1],10]
+					} else {
+						if (_dist < 30) then {
+							_velocity = [0,12 + random [-1.25, 0, 1.25],10]
+						} else {
+							_velocity = [0,16 + random [-1.25, 0, 1.5],10]
+						};
+					};
+				};
+				
+				_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
+			}
+		];
+		_u setVariable ["IWB_FireEH", _eh];
+	} else {
+		_u removeEventHandler ["Fired", _u getVariable ["IWB_FireEH",-1]];
+		_u setVariable ["IWB_FireEH", nil];
+	};
+};
 
 
 /* **************** */
@@ -30,6 +70,15 @@ dzn_fnc_iwb_getLongTimeoutDone = { _this getVariable ["IWB_LongTimeoutDone",fals
 dzn_fnc_iwb_GetUnitCombatAttributes = {
 	private _u = _this;
 	private _hasUGL = false;
+	private _hasGrenades = false;
+	
+	private _mags = itemsWithMagazines _u;	
+	{ 
+		if ((_x select 0) in _mags) exitWith { 
+			_u setVariable ["IWB_HGMuzzle", _x select 1, true];
+			_hasGrenades = true;
+		};
+	} forEach dzn_iwb_HGList;
 	
 	private _muzzles = (getArray(configFile >> "cfgWeapons" >> primaryWeapon _u >> "muzzles")) - ["SAFE"];
 	if ( 
@@ -41,32 +90,39 @@ dzn_fnc_iwb_GetUnitCombatAttributes = {
 	};
 	
 	_u setVariable ["IWB_UGL", _hasUGL, true];
+	_u setVariable ["IWB_HG", _hasGrenades, true];
 };
 
 dzn_fnc_iwb_SelectAttackAndTarget = {
+	#define	NO_ATTACK	[false, objNull, ""]	
 	private _u = _this;
+	
+	if (!simulationEnabled _u || _u getVariable ["dzn_dynai_isCached", false]) exitWith {
+		if (DEBUG) then { systemChat "SelectAttack: Unit cached/not simulated!"; };
+		NO_ATTACK
+	};
 	
 	if (_u getVariable ["IWB_inSequence", false]) exitWith {
 		if (DEBUG) then { systemChat "SelectAttack: Sequence in progress"; };
-		[false, objNull, ""]	
+		NO_ATTACK	
 	};
 	
 	private _chance = random(100);
 	if ( _chance > dzn_iwb_SpecialAttackChance ) exitWith { 
 		if (DEBUG) then { systemChat format ["SelectAttack: No % chance ( %1 )", _chance]; };
-		[false, objNull, ""]	
+		NO_ATTACK
 	};
 	
-	private _modes = ["IWB_UGL"] select { _u getVariable [_x, false] };
+	private _modes = ["IWB_UGL","IWB_HG"] select { _u getVariable [_x, false] };
 	if (_modes isEqualTo []) exitWith {  
 		if (DEBUG) then { systemChat format ["SelectAttack: No modes available ( %1 )", _modes]; };
-		[false, objNull, ""]
+		NO_ATTACK
 	};
 	
 	private _targets = _u call dzn_fnc_iwb_GetTargets;
 	if (_targets isEqualTo []) exitWith { 
 		if (DEBUG) then { systemChat format ["SelectAttack: Targets ( %1 )", _tgts]; };
-		[false, objNull, ""]
+		NO_ATTACK
 	};
 	
 	#define IN_MODES(X)	(X in _modes)
@@ -79,7 +135,13 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		[true, _tgt, "IWB_UGL"]
 	};
 	
-	[false, objNull, ""]
+	if (IN_MODES("IWB_HG") && { HAS_TGTS(1) }) exitWith {	
+		private _tgt = GET_TGT(1);
+		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_HG ( %1 )", _tgt]; };
+		[true, _tgt, "IWB_HG"]
+	};
+	
+	NO_ATTACK
 };
 
 dzn_fnc_iwb_GetTargets = {
@@ -101,6 +163,7 @@ dzn_fnc_iwb_GetTargets = {
 		);
 	} forEach [ 
 		dzn_iwb_UGLAttackRange
+		, dzn_iwb_HGAttackRange
 	];
 	
 	_filteredTargets
@@ -115,6 +178,8 @@ dzn_fnc_iwb_runAttackSequenceRemote = {
 	
 	private _seqFunction = switch toUpper(_sequenceName) do {
 		case "UGL": { "dzn_fnc_iwb_UGLAttack" };
+		case "HG": { "dzn_fnc_iwb_HGAttack" };
+		case "SUPPRESS": { "dzn_fnc_iwb_Suppress" };
 	};
 	
 	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
@@ -168,3 +233,108 @@ dzn_fnc_iwb_UGLAttack = {
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
+dzn_fnc_iwb_HGAttack = {
+	params["_u","_tgt"];
+	
+	_u setVariable ["IWB_inSequence",true,true];
+	private _dir = _u getDir _tgt;
+	private _dist = _u distance _tgt;
+	
+	private _intersects = false;
+	private _posData = [eyePos _u, getPosASL _u];
+	
+	{
+		private _unitPos = _posData select 1;
+		private _xVal = (_unitPos select 0) + ((sin (_dir + _x)) * 5);
+		private _yVal = (_unitPos select 1) + ((cos (_dir + _x)) * 5);
+		
+		{
+			if (lineIntersects [_posData select 0, [_xVal, _yVal, (_unitPos select 2) + _x], _u]) exitWith {
+				_intersects = true;
+			};			
+		} forEach [4,5];
+	} forEach [0, -1, 1];
+	
+	if (_intersects) exitWith { _u setVariable ["IWB_inSequence", false, true];	 };
+
+	_u doWatch _tgt;
+	_u doTarget _tgt;
+	_u setVariable ["IWB_HG_TargetRange", _dist, true];	
+	
+	private _cancelTimer = time + 1;	
+	waitUntil {
+		sleep .1;
+		abs(_dir - (getDir _u)) < 30 || time > _cancelTimer
+	};
+	
+	private _distanceError = _dist / 10;
+	_dir = _dir + random[-1*_distanceError,0,_distanceError];
+	
+	[_u, _dir] spawn { 
+		for "_i" from 0 to 20 do { 
+			sleep .025; (_this select 0) setDir (_this select 1); 
+		}; 
+	};
+	
+	_u fire (_u getVariable "IWB_HGMuzzle");
+	
+	sleep 1;
+	
+	_u selectWeapon (primaryWeapon _u);
+	_u switchMove "";
+	
+	_u setVariable ["IWB_inSequence", false, true];	
+};
+
+dzn_fnc_iwb_Suppress = {
+	params["_u","_tgt"];
+	
+	_u setVariable ["IWB_inSequence",true,true];
+	private _tgtPos = selectRandom ([_u, _tgt] call dzn_fnc_iwb_SelectSuppressPos);
+	
+	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
+	_tgtObj setPosASL _tgtPos;
+	
+	_u reveal _tgtObj;	
+	_u doSuppressiveFire _tgtObj;
+	sleep round(random [8,10,15]);
+	
+	deleteVehicle _tgtObj;
+	
+	_u setVariable ["IWB_inSequence", false, true];		
+};
+
+dzn_fnc_iwb_SelectSuppressPos = {
+	params["_u","_tgt"];
+	
+	private _basicTgtOffset = _tgt selectionPosition "pelvis";	
+	private _suppressPositions = [];
+	{
+		private _tgtCheckPos = ATLtoASL(_tgt modelToWorld [
+			(_basicTgtOffset select 0) + _x
+			, _basicTgtOffset select 1
+			, _basicTgtOffset select 2
+		]);
+		
+		private _tgtPos = _tgtCheckPos;
+		private _intersectedPosition = false;
+		
+		private _intersectTerrainPos = terrainIntersectAtASL [eyePos _u, _tgtCheckPos];	
+		if !(_intersectTerrainPos isEqualTo [0,0,0]) then {
+			_intersectedPosition = true;
+			_tgtPos = _intersectTerrainPos;
+		} else {			
+			private _inresectedObjects = lineIntersectsObjs [eyePos _u, _tgtCheckPos, objNull, _u, true, 16];
+			if !(_inresectedObjects isEqualTo []) then {
+				_intersectedPosition = true;
+				_tgtPos = getPosASL (_inresectedObjects select 0);
+			};
+		};		
+		
+		if !(_intersectedPosition) exitWith { _suppressPositions = [_tgtPos]; };
+		
+		_suppressPositions pushBack _tgtPos;	
+	} forEach [0,3,-3];
+
+	_suppressPositions
+};
