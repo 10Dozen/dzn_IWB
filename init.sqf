@@ -39,7 +39,7 @@ call compile preProcessFileLineNumbers "\dzn_IWB\fn.sqf";
 
 publicVariable "dzn_iwb_UGLRoundsList";
 publicVariable "dzn_fnc_iwb_GetUnitCombatAttributes";
-publicVariable "dzn_fnc_iwb_UGLAttack ";
+publicVariable "dzn_fnc_iwb_UGLAttack";
 
 [] spawn {
 	waitUntil { time > 0 };
