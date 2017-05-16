@@ -91,8 +91,7 @@ dzn_fnc_iwb_GetUnitCombatAttributes = {
 	} forEach dzn_iwb_HGList;
 	
 	_hasSupportWeapon = getNumber (configFile >> "CfgMagazines" >> currentMagazine _u >> "count") > 30;
-	
-	
+
 	_u setVariable ["IWB_UGL", _hasUGL, true];
 	_u setVariable ["IWB_HG", _hasGrenades, true];
 	_u setVariable ["IWB_SW", _hasSupportWeapon, true];
@@ -146,8 +145,8 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		[true, _tgt, "IWB_HG"]
 	};
 	
-	if (IN_MODES("IWB_SW") && { HAS_TGTS(1) }) exitWith {	
-		private _tgt = GET_TGT(1);
+	if (IN_MODES("IWB_SW") && { HAS_TGTS(2) }) exitWith {	
+		private _tgt = GET_TGT(2);
 		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_SW ( %1 )", _tgt]; };
 		[true, _tgt, "IWB_SW"]
 	};
@@ -191,7 +190,7 @@ dzn_fnc_iwb_runAttackSequenceRemote = {
 	private _seqFunction = switch toUpper(_sequenceName) do {
 		case "UGL": { "dzn_fnc_iwb_UGLAttack" };
 		case "HG": { "dzn_fnc_iwb_HGAttack" };
-		case "SUPPRESS": { "dzn_fnc_iwb_Suppress" };
+		case "SW": { "dzn_fnc_iwb_Suppress" };
 	};
 	
 	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
@@ -350,3 +349,4 @@ dzn_fnc_iwb_SelectSuppressPos = {
 
 	_suppressPositions
 };
+
