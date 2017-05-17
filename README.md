@@ -6,3 +6,6 @@ Task:
   - [IN TEST] Add Hand Grenade sequence
   - [IN TEST] Add Supressive fire sequence
   - [IN TEST] Add move to cover behavior
+
+Bugs:
+  - Suppress attack: exit attack if there more than 3 objects in line of attack
