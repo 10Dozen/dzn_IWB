@@ -6,7 +6,7 @@ dzn_fnc_icb_SetSuppressionHandler =  {
 	
 	while { alive _u } do {
 		if (
-			( (getSuppression _u > 0 && isNull (_u getVariable "ICB_Cover")) || (getSuppression _u > 0.5) )
+			( (getSuppression _u > 0 && isNull (_u getVariable "ICB_Cover")) || (getSuppression _u > 0.75) )
 			&& !(_u getVariable ["ICB_MovingInCover", false])
 		) then {	
 			_u spawn dzn_fnc_icb_FindCover;
