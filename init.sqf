@@ -71,6 +71,7 @@ publicVariable "dzn_iwb_HGList";
 		[] spawn {
 			private _allUnits = allUnits select { 
 				!(_x getVariable ["IWB_Running",false])
+				&& vehicle _x == _x
 				&& !isPlayer _x
 				&& side _x != civilian
 			};
