@@ -227,20 +227,16 @@ dzn_fnc_iwb_UGLAttack2 = {
 	// Targeting
 	private _dist = _u distance _tgt;
 	private _distanceError = _dist / (
-		if ((_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]) distnace (getPosASL _tgt) < 75) then { 10 } else { 5 }
+		if ((_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]) distnace (getPosATL _tgt) < 75) then { 10 } else { 5 }
 	);
-	private _tgtPos = [
-		getPosASL _tgt
-		, (_u getDir _tgt) + (random[-2,0,2]) * (_dist / 20)
+	private _tgtPos = (getPosATL _u) getPos [
+		(_u getDir _tgt) + (random[-2,0,2]) * (_dist / 20)
 		, _dist + random[ -1*_distanceError, 0 , _distanceError]
-	] call dzn_fnc_iwb_getPosOnDir;
-	
+	];	
 	
 	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
-	_tgtObj setPosASL _tgtPos;	
-	_u reveal _tgtObj;	
-	
-	
+	_tgtObj setPosATL _tgtPos;	
+	_u reveal _tgtObj;
 	
 	// Primary gun
 	private _curMagAmmo = _u ammo _priWpn;
@@ -249,24 +245,21 @@ dzn_fnc_iwb_UGLAttack2 = {
 	for "_i" from 0 to (_magCount - 1) do { _u removeMagazine _mainMag; };
 	_u setAmmo [_priWpn, 0];
 	
-	if (_priWpn != currentWeapon _u) then {
-		_u selectWeapon _priWpn;
-		sleep 1;
-	};
-	
+	if (_priWpn != currentWeapon _u) then {	_u selectWeapon _priWpn; sleep 1; };
 	
 	_u doWatch _tgtObj;
 	_u commandFire _tgtObj;
 	
-	sleep 3;
+	sleep 2;
 	
-	_u setVariable ["IWB_UGL_LastTargetPos", _tgt];
 	_u doWatch objNull;
 	_u selectWeapon _priWpn;
 	_u addMagazines [_mainMag, _magCount];
 	_u setAmmo [_priWpn, _curMagAmmo];
 	
 	_u setVariable ["IWB_inSequence", false, true];
+	_u setVariable ["IWB_UGL_LastTargetPos", getPosATL _tgt];
+	
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
