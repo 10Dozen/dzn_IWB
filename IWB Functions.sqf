@@ -180,6 +180,15 @@ dzn_fnc_iwb_GetTargets = {
 	_filteredTargets
 };
 
+dzn_fnc_iwb_getPosOnDir = {
+	params ["_pos", "_dir", "_dist"];
+	
+	[
+		(_pos select 0) + ((sin _dir) * _dist),
+		(_pos select 1) + ((cos _dir) * _dist),
+		_pos select 2
+	]
+};
 
 /**
 	Attack Sequences
@@ -194,6 +203,71 @@ dzn_fnc_iwb_runAttackSequenceRemote = {
 	};
 	
 	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
+};
+
+
+dzn_fnc_iwb_UGLAttack2 = {
+	params["_u","_tgt"];
+	
+	private _priWpn = primaryWeapon _u;
+	if (_priWpn == "") exitWith {};
+	
+	_u setVariable ["IWB_inSequence", true, true];
+	_u doWatch _tgt;
+	
+	private _allMags = primaryWeaponMagazine _u;	
+	if (
+		!isNil {_allMags select 1} && { !((_allMags select 1) in dzn_iwb_UGLRoundsList) }
+	) exitWith { 
+		_u selectWeapon _priWpn;
+		_u setVariable ["IWB_inSequence", false, true];
+		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
+	};
+	
+	// Targeting
+	private _dist = _u distance _tgt;
+	private _distanceError = _dist / (
+		if ((_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]) distnace (getPosASL _tgt) < 75) then { 10 } else { 5 }
+	);
+	private _tgtPos = [
+		getPosASL _tgt
+		, (_u getDir _tgt) + (random[-2,0,2]) * (_dist / 20)
+		, _dist + random[ -1*_distanceError, 0 , _distanceError]
+	] call dzn_fnc_iwb_getPosOnDir;
+	
+	
+	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
+	_tgtObj setPosASL _tgtPos;	
+	_u reveal _tgtObj;	
+	
+	
+	
+	// Primary gun
+	private _curMagAmmo = _u ammo _priWpn;
+	private _mainMag = _allMags select 0;
+	private _magCount = { _x == _mainMag } count (magazines _u);	
+	for "_i" from 0 to (_magCount - 1) do { _u removeMagazine _mainMag; };
+	_u setAmmo [_priWpn, 0];
+	
+	if (_priWpn != currentWeapon _u) then {
+		_u selectWeapon _priWpn;
+		sleep 1;
+	};
+	
+	
+	_u doWatch _tgtObj;
+	_u commandFire _tgtObj;
+	
+	sleep 3;
+	
+	_u setVariable ["IWB_UGL_LastTargetPos", _tgt];
+	_u doWatch objNull;
+	_u selectWeapon _priWpn;
+	_u addMagazines [_mainMag, _magCount];
+	_u setAmmo [_priWpn, _curMagAmmo];
+	
+	_u setVariable ["IWB_inSequence", false, true];
+	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
 dzn_fnc_iwb_UGLAttack = {
