@@ -180,15 +180,6 @@ dzn_fnc_iwb_GetTargets = {
 	_filteredTargets
 };
 
-dzn_fnc_iwb_getPosOnDir = {
-	params ["_pos", "_dir", "_dist"];
-	
-	[
-		(_pos select 0) + ((sin _dir) * _dist),
-		(_pos select 1) + ((cos _dir) * _dist),
-		_pos select 2
-	]
-};
 
 /**
 	Attack Sequences
@@ -206,7 +197,9 @@ dzn_fnc_iwb_runAttackSequenceRemote = {
 };
 
 
-dzn_fnc_iwb_UGLAttack2 = {
+
+
+dzn_fnc_iwb_UGLAttack = {
 	params["_u","_tgt"];
 	
 	private _priWpn = primaryWeapon _u;
@@ -217,8 +210,10 @@ dzn_fnc_iwb_UGLAttack2 = {
 	
 	private _allMags = primaryWeaponMagazine _u;	
 	if (
-		!isNil {_allMags select 1} && { !((_allMags select 1) in dzn_iwb_UGLRoundsList) }
+		isNil {_allMags select 1} || 
+		( !isNil {_allMags select 1} && { !((_allMags select 1) in dzn_iwb_UGLRoundsList) } )
 	) exitWith { 
+		systemChat "No mags";
 		_u selectWeapon _priWpn;
 		_u setVariable ["IWB_inSequence", false, true];
 		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
@@ -227,16 +222,18 @@ dzn_fnc_iwb_UGLAttack2 = {
 	// Targeting
 	private _dist = _u distance _tgt;
 	private _distanceError = _dist / (
-		if ((_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]) distnace (getPosATL _tgt) < 75) then { 10 } else { 5 }
+		if ( (_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]]) distance _tgt < 50 ) then { 10 } else { 5 }
 	);
 	private _tgtPos = (getPosATL _u) getPos [
-		(_u getDir _tgt) + (random[-2,0,2]) * (_dist / 20)
-		, _dist + random[ -1*_distanceError, 0 , _distanceError]
-	];	
+		_dist + random[ -1*_distanceError, (-1*_distanceError)/3, _distanceError]
+		, (_u getDir _tgt) + (random[-4,0,4]) 
+	];
 	
 	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
 	_tgtObj setPosATL _tgtPos;	
+	
 	_u reveal _tgtObj;
+	_u doWatch _tgtObj;
 	
 	// Primary gun
 	private _curMagAmmo = _u ammo _priWpn;
@@ -246,8 +243,6 @@ dzn_fnc_iwb_UGLAttack2 = {
 	_u setAmmo [_priWpn, 0];
 	
 	if (_priWpn != currentWeapon _u) then {	_u selectWeapon _priWpn; sleep 1; };
-	
-	_u doWatch _tgtObj;
 	_u commandFire _tgtObj;
 	
 	sleep 2;
@@ -259,55 +254,8 @@ dzn_fnc_iwb_UGLAttack2 = {
 	
 	_u setVariable ["IWB_inSequence", false, true];
 	_u setVariable ["IWB_UGL_LastTargetPos", getPosATL _tgt];
+	deleteVehicle _tgtObj;
 	
-	if (DEBUG) then { systemChat "Out of sequence"; };
-};
-
-dzn_fnc_iwb_UGLAttack = {
-	params["_u","_tgt"];
-	
-	private _priWpn = primaryWeapon _u;
-	if (_priWpn == "") exitWith { systemChat "No Primary weapon"; };
-	
-	_u setVariable ["IWB_inSequence", true, true];
-	_u doWatch _tgt;
-	
-	if (DEBUG) then { systemChat "Attacking with UGL!"; };	
-	
-	private _allMags = primaryWeaponMagazine _u;	
-	if (
-		!isNil {_allMags select 1} 
-		&& { !((_allMags select 1) in dzn_iwb_UGLRoundsList) }
-	) exitWith { 
-		if (DEBUG) then { systemChat "No GL ammo!"; };	
-		
-		_u selectWeapon _priWpn;
-		_u setVariable ["IWB_inSequence", false, true];
-		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
-	};
-	
-	// Primary gun
-	private _curMagAmmo = _u ammo _priWpn;
-	private _mainMag = _allMags select 0;
-	private _magCount = { _x == _mainMag } count (magazines _u);	
-	for "_i" from 0 to (_magCount - 1) do { _u removeMagazine _mainMag; };
-	_u setAmmo [_priWpn, 0];
-	
-	if (_priWpn != currentWeapon _u) then {
-		_u selectWeapon _priWpn;
-		sleep 1;
-	};
-	
-	_u commandFire _tgt;
-	
-	sleep 3;
-	
-	_u doWatch objNull;
-	_u selectWeapon _priWpn;
-	_u addMagazines [_mainMag, _magCount];
-	_u setAmmo [_priWpn, _curMagAmmo];
-	
-	_u setVariable ["IWB_inSequence", false, true];
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
@@ -365,55 +313,59 @@ dzn_fnc_iwb_HGAttack = {
 };
 
 dzn_fnc_iwb_Suppress = {
-	params["_u","_tgt"];
-	
+	params["_u","_tgt"];	
 	_u setVariable ["IWB_inSequence",true,true];
-	private _tgtPos = selectRandom ([_u, _tgt] call dzn_fnc_iwb_SelectSuppressPos);
 	
+	private _tgtPos = selectRandom ([_u, _tgt] call dzn_fnc_iwb_SelectSuppressPos);	
 	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
 	_tgtObj setPosASL _tgtPos;
 	
 	_u reveal _tgtObj;	
 	_u doSuppressiveFire _tgtObj;
-	sleep round(random [8,10,15]);
+	sleep round(random [8,10,13]);
 	
-	deleteVehicle _tgtObj;
-	
+	deleteVehicle _tgtObj;	
 	_u setVariable ["IWB_inSequence", false, true];		
 };
 
 dzn_fnc_iwb_SelectSuppressPos = {
 	params["_u","_tgt"];
 	
-	private _basicTgtOffset = _tgt selectionPosition "pelvis";	
-	private _suppressPositions = [];
-	{
-		private _tgtCheckPos = ATLtoASL(_tgt modelToWorld [
-			(_basicTgtOffset select 0) + _x
-			, _basicTgtOffset select 1
-			, _basicTgtOffset select 2
-		]);
+	private _unitPos = getPos _u;
+	private _dir = _u getDir _tgt;
+	private _dist = _u distance _tgt;	
+	private _tgtZOffset = (_tgt selectionPosition "pelvis") select 2;
+	
+	private _suppressPositions = [];	
+	{	
+		private _tgtCheckPos = _unitPos getPos [
+			sqrt(_dist^2 + _x^2)
+			, _dir + asin (_x/sqrt(_dist^2 + _x^2))
+		];
+		_tgtCheckPos set [2, _tgtZOffset];
+		_tgtCheckPos = ATLtoASL(_tgtCheckPos);
 		
 		private _tgtPos = _tgtCheckPos;
-		private _intersectedPosition = false;
+		private _intersectedPosition = false;		
+		private _intersectTerrainPos = terrainIntersectAtASL [eyePos _u, _tgtCheckPos];
 		
-		private _intersectTerrainPos = terrainIntersectAtASL [eyePos _u, _tgtCheckPos];	
 		if !(_intersectTerrainPos isEqualTo [0,0,0]) then {
+			// Check terrain interference
 			_intersectedPosition = true;
 			_tgtPos = _intersectTerrainPos;
-		} else {			
-			private _inresectedObjects = lineIntersectsObjs [eyePos _u, _tgtCheckPos, objNull, _u, true, 16];
-			if !(_inresectedObjects isEqualTo []) then {
+		} else {
+			private _inresectedObjects = lineIntersectsObjs [eyePos _u, _tgtCheckPos, objNull, _u, true];
+			if !(_inresectedObjects isEqualTo [])  then {
+				// Check objects interfence
 				_intersectedPosition = true;
-				_tgtPos = getPosASL (_inresectedObjects select 0);
+				_tgtPos = _tgtCheckPos;
 			};
 		};		
 		
 		if !(_intersectedPosition) exitWith { _suppressPositions = [_tgtPos]; };
 		
 		_suppressPositions pushBack _tgtPos;	
-	} forEach [0,3,-3];
+	} forEach [0,5,-5];
 
 	_suppressPositions
 };
-
