@@ -10,6 +10,10 @@ dzn_fnc_icb_SetSuppressionHandler =  {
 			&& !(_u getVariable ["ICB_MovingInCover", false])
 		) then {	
 			_u spawn dzn_fnc_icb_FindCover;
+			if !(combatMode (group _u) in ["RED","YELLOW"]) then {
+				(group _u) setCombatMode "RED";
+				(group _u) setSpeedMode "FULL";
+			};
 		};
 		
 		_u call dzn_fnc_icb_ProvideSuppressEffect;
@@ -85,9 +89,9 @@ dzn_fnc_icb_FindCover = {
 	
 	waitUntil { 
 		sleep 0.5; 
-		_u setUnitPos "UP";
+		// _u setUnitPos "UP";
 		_u setAnimSpeedCoef 1.5;
-		_u  distance (_cover select 0) < 10
+		_u distance (_cover select 0) < 5
 	};
 	
 	_this setVariable ["ICB_MovingInCover", false];
