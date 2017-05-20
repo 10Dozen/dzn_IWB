@@ -1,5 +1,8 @@
 dzn_fnc_icb_SetSuppressionHandler =  {
 	private _u = _this;
+	if (!local _u) exitWith {
+		_u remoteExec ["dzn_fnc_icb_SetSuppressionHandler",_u];
+	};
 	
 	_u setVariable ["ICB_Cover", objNull];
 	_u setVariable ["ICB_Skills", [_u skill "aimingAccuracy", _u skill "aimingShake", _u skill "aimingSpeed", _u skill "reloadSpeed"]];
