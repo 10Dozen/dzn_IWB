@@ -213,7 +213,6 @@ dzn_fnc_iwb_UGLAttack = {
 		isNil {_allMags select 1} || 
 		( !isNil {_allMags select 1} && { !((_allMags select 1) in dzn_iwb_UGLRoundsList) } )
 	) exitWith { 
-		systemChat "No mags";
 		_u selectWeapon _priWpn;
 		_u setVariable ["IWB_inSequence", false, true];
 		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
