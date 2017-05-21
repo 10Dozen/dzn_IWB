@@ -15,3 +15,4 @@ Task:
 Bugs/Features:
   - Suppress attack: Remeber last target and if no new targets and target alive and in range -> use as new target
   - [IN TEST] UGL: Randomize target position and implement distance accuracy nerf; implement last known attack position aiming boost.
+  - Handcuffed / Surrendered units should avoid IWB attacks
