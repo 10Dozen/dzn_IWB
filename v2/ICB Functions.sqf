@@ -9,7 +9,15 @@ dzn_fnc_icb_SetSuppressionHandler =  {
 	_u setVariable ["ICB_Skills", [_u skill "aimingAccuracy", _u skill "aimingShake", _u skill "aimingSpeed", _u skill "reloadSpeed"]];
 	
 	while { alive _u } do {
-		if (side _u != civilian) then {		
+		if (
+			simulationEnabled _u 
+			|| !(_u getVariable ["dzn_dynai_isCached", false])
+			|| vehicle _u == _u
+			|| side _u != civilian
+			|| !(_u getVariable ["ACE_isUnconscious", false])
+			|| !(_u getVariable ["ACE_isSurrendering", false])
+			|| !(_u getVariable ["ACE_isHandcuffed", false])
+		) then {		
 			if (
 				( 
 					(getSuppression _u > 0 	&& isNull (_u getVariable "ICB_Cover")) 
