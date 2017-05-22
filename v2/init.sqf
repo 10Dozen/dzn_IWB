@@ -3,8 +3,8 @@
  *	v.2
  */
 
-call compile preProcessFileLineNumbers "\dzn_IWB\IWB_Functions.sqf";
-call compile preProcessFileLineNumbers "\dzn_IWB\ICB_Functions.sqf";
+call compile preProcessFileLineNumbers "\dzn_IWB\IWB Functions.sqf";
+call compile preProcessFileLineNumbers "\dzn_IWB\ICB Functions.sqf";
 
 if !(isServer) exitWith {};
 
