@@ -1,5 +1,6 @@
 dzn_fnc_icb_SetSuppressionHandler =  {
 	private _u = _this;
+	if (side _u == civilian) exitWith {};
 	if (!local _u) exitWith {
 		_u remoteExec ["dzn_fnc_icb_SetSuppressionHandler",_u];
 	};
@@ -8,19 +9,24 @@ dzn_fnc_icb_SetSuppressionHandler =  {
 	_u setVariable ["ICB_Skills", [_u skill "aimingAccuracy", _u skill "aimingShake", _u skill "aimingSpeed", _u skill "reloadSpeed"]];
 	
 	while { alive _u } do {
-		if (
-			( (getSuppression _u > 0 && isNull (_u getVariable "ICB_Cover")) || (getSuppression _u > 0.75) )
-			&& !(_u getVariable ["ICB_MovingInCover", false])
-		) then {	
-			_u spawn dzn_fnc_icb_FindCover;
-			if !(combatMode (group _u) in ["RED","YELLOW"]) then {
-				(group _u) setCombatMode "RED";
-				(group _u) setSpeedMode "FULL";
+		if (side _x != civilian) then {		
+			if (
+				( 
+					(getSuppression _u > 0 	&& isNull (_u getVariable "ICB_Cover")) 
+					|| (getSuppression _u > 0.75) 
+				)
+				&& !(_u getVariable ["ICB_MovingInCover", false])
+			) then {	
+				_u spawn dzn_fnc_icb_FindCover;
+				if !(combatMode (group _u) in ["RED","YELLOW"]) then {
+					(group _u) setCombatMode "RED";
+					(group _u) setSpeedMode "FULL";
+				};
 			};
+
+			_u call dzn_fnc_icb_ProvideSuppressEffect;
+		
 		};
-		
-		_u call dzn_fnc_icb_ProvideSuppressEffect;
-		
 		sleep 1;
 	};
 };
