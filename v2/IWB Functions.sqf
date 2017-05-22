@@ -248,6 +248,10 @@ dzn_fnc_iwb_UGLAttack = {
 	for "_i" from 0 to (_magCount - 1) do { _u removeMagazine _mainMag; };
 	_u setAmmo [_priWpn, 0];
 	
+	private _skills = [_u skill "aimingAccuracy", _u skill "aimingShake"];
+	_u setSkill ["aimingAccuracy",0.05];
+	_u setSkill ["aimingShake",0.05];
+	
 	if (_priWpn != currentWeapon _u) then {	_u selectWeapon _priWpn; sleep 1; };
 	_u commandFire _tgtObj;
 	
@@ -261,6 +265,9 @@ dzn_fnc_iwb_UGLAttack = {
 	_u setVariable ["IWB_inSequence", false, true];
 	_u setVariable ["IWB_UGL_LastTargetPos", getPosATL _tgt];
 	deleteVehicle _tgtObj;
+	
+	_u setSkill ["aimingAccuracy", _skills select 0];
+	_u setSkill ["aimingShake", _skills select 1];
 	
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
