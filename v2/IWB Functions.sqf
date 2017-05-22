@@ -104,6 +104,7 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 	if (
 		!simulationEnabled _u 
 		|| _u getVariable ["dzn_dynai_isCached", false] 
+		|| vehicle _u != _u
 		|| side _u == civilian
 		|| _u getVariable ["ACE_isUnconscious", false]
 		|| _u getVariable ["ACE_isSurrendering", false]
