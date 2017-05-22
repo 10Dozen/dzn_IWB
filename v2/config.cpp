@@ -1,13 +1,11 @@
-#include "BIS_AddonInfo.hpp"
 class CfgPatches
 {
 	class dzn_IWB
 	{		
 		units[] = {};
 		weapons[] = {};
-		requiredVersion = 1.0;
+		requiredVersion = 0.1;
 		requiredAddons[] = {"CBA_MAIN"};
-		version = "V2";
 		author[] = {"10Dozen"};
 	};
 };
