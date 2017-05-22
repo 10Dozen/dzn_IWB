@@ -3,8 +3,8 @@
  *	v.2
  */
 
-call compile preProcessFileLineNumbers "/dzn_IWB/IWB Functions.sqf";
-call compile preProcessFileLineNumbers "/dzn_IWB/ICB Functions.sqf";
+call compile preProcessFileLineNumbers "\dzn_IWB\IWB_Functions.sqf";
+call compile preProcessFileLineNumbers "\dzn_IWB\ICB_Functions.sqf";
 
 if !(isServer) exitWith {};
 
@@ -78,7 +78,7 @@ publicVariable "dzn_iwb_HGList";
 			
 			{
 				_x setVariable ["IWB_Running",true];
-				_x execFSM "/dzn_IWB/IWB.fsm";
+				_x execFSM "\dzn_IWB\IWB.fsm";
 				
 				sleep 1;
 			} forEach _allUnits;
