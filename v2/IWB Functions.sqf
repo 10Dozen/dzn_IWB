@@ -101,7 +101,12 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 	#define	NO_ATTACK	[false, objNull, ""]	
 	private _u = _this;
 	
-	if (!simulationEnabled _u || _u getVariable ["dzn_dynai_isCached", false]) exitWith {
+	if (
+		!simulationEnabled _u 
+		|| _u getVariable ["dzn_dynai_isCached", false] 
+		|| side _u == civilian
+		|| _u getVariable ["ACE_isUnconscious", false]
+	)  exitWith {
 		if (DEBUG) then { systemChat "SelectAttack: Unit cached/not simulated!"; };
 		NO_ATTACK
 	};
