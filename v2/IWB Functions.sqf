@@ -106,6 +106,8 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		|| _u getVariable ["dzn_dynai_isCached", false] 
 		|| side _u == civilian
 		|| _u getVariable ["ACE_isUnconscious", false]
+		|| _u getVariable ["ACE_isSurrendering", false]
+		|| _u getVariable ["ACE_isHandcuffed", false]
 	)  exitWith {
 		if (DEBUG) then { systemChat "SelectAttack: Unit cached/not simulated!"; };
 		NO_ATTACK
