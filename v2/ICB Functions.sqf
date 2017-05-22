@@ -9,7 +9,7 @@ dzn_fnc_icb_SetSuppressionHandler =  {
 	_u setVariable ["ICB_Skills", [_u skill "aimingAccuracy", _u skill "aimingShake", _u skill "aimingSpeed", _u skill "reloadSpeed"]];
 	
 	while { alive _u } do {
-		if (side _x != civilian) then {		
+		if (side _u != civilian) then {		
 			if (
 				( 
 					(getSuppression _u > 0 	&& isNull (_u getVariable "ICB_Cover")) 
@@ -41,7 +41,7 @@ dzn_fnc_icb_SetSkillAffected = {
 
 dzn_fnc_icb_ProvideSuppressEffect = {
 	private _u = _this;
-	private _supression = getSuppression _u;
+	private _supression = if (!isNil {getSuppression _u}) then { getSuppression _u } else { 0 };
 	_u setUnitPos "AUTO";
 	
 	if (_supression < 0.2) exitWith {
