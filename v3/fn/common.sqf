@@ -62,3 +62,33 @@ dzn_fnc_CENA_ToggleHandGrenadeEH = {
 		_u setVariable ["CENA_FireEH", nil];
 	};
 };
+
+dzn_fnc_CENA_GetUnitCombatAttributes = {
+	private _u = _this;
+	private _hasUGL = false;
+	private _hasGrenades = false;
+	private _hasSupportWeapon = false;
+	
+	private _muzzles = (getArray(configFile >> "cfgWeapons" >> primaryWeapon _u >> "muzzles")) - ["SAFE"];
+	if ( 
+		count _muzzles > 1 
+		&& count (primaryWeaponMagazine _u) > 1 
+		&& { (primaryWeaponMagazine _u select 1) in dzn_iwb_UGLRoundsList }
+	) then { 
+		_hasUGL = true;
+	};
+	
+	private _mags = itemsWithMagazines _u;	
+	{ 
+		if ((_x select 0) in _mags) exitWith { 
+			_u setVariable ["CENA_HGMuzzle", _x select 1, true];
+			_hasGrenades = true;
+		};
+	} forEach dzn_iwb_HGList;
+	
+	_hasSupportWeapon = getNumber (configFile >> "CfgMagazines" >> currentMagazine _u >> "count") > 30;
+
+	_u setVariable ["CENA_UGL", _hasUGL, true];
+	_u setVariable ["CENA_HG", _hasGrenades, true];
+	_u setVariable ["CENA_MG", _hasSupportWeapon, true];
+};
