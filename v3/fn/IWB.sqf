@@ -1,5 +1,4 @@
- 
-dzn_fnc_iwb_SelectAttackAndTarget = {
+dzn_fnc_CENA_SelectAttackAndTarget = {
 	#define	NO_ATTACK	[false, objNull, ""]	
 	private _u = _this;
 	
@@ -16,24 +15,24 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 		NO_ATTACK
 	};
 	
-	if (_u getVariable ["IWB_inSequence", false]) exitWith {
+	if (_u getVariable ["CENA_inSequence", false]) exitWith {
 		if (DEBUG) then { systemChat "SelectAttack: Sequence in progress"; };
 		NO_ATTACK	
 	};
 	
 	private _chance = random(100);
-	if ( _chance > dzn_iwb_SpecialAttackChance ) exitWith { 
+	if ( _chance > dzn_CENA_SpecialAttackChance ) exitWith { 
 		if (DEBUG) then { systemChat format ["SelectAttack: No % chance ( %1 )", _chance]; };
 		NO_ATTACK
 	};
 	
-	private _modes = ["IWB_UGL","IWB_HG","IWB_SW"] select { _u getVariable [_x, false] };
+	private _modes = ["CENA_UGL","CENA_HG","CENA_MG"] select { _u getVariable [_x, false] };
 	if (_modes isEqualTo []) exitWith {  
 		if (DEBUG) then { systemChat format ["SelectAttack: No modes available ( %1 )", _modes]; };
 		NO_ATTACK
 	};
 	
-	private _targets = _u call dzn_fnc_iwb_GetTargets;
+	private _targets = _u call dzn_fnc_CENA_GetTargets;
 	if (_targets isEqualTo []) exitWith { 
 		if (DEBUG) then { systemChat format ["SelectAttack: Targets ( %1 )", _tgts]; };
 		NO_ATTACK
@@ -43,28 +42,28 @@ dzn_fnc_iwb_SelectAttackAndTarget = {
 	#define HAS_TGTS(X)	!((_targets select X) isEqualTo [])
 	#define GET_TGT(X)	(selectRandom (_targets select X)) select 1
 	
-	if (IN_MODES("IWB_UGL") && { HAS_TGTS(0) }) exitWith {	
+	if (IN_MODES("CENA_UGL") && { HAS_TGTS(0) }) exitWith {	
 		private _tgt = GET_TGT(0);
-		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_UGL ( %1 )", _tgt]; };
-		[true, _tgt, "IWB_UGL"]
+		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is CENA_UGL ( %1 )", _tgt]; };
+		[true, _tgt, "CENA_UGL"]
 	};
 	
-	if (IN_MODES("IWB_HG") && { HAS_TGTS(1) }) exitWith {	
+	if (IN_MODES("CENA_HG") && { HAS_TGTS(1) }) exitWith {	
 		private _tgt = GET_TGT(1);
-		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_HG ( %1 )", _tgt]; };
-		[true, _tgt, "IWB_HG"]
+		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is CENA_HG ( %1 )", _tgt]; };
+		[true, _tgt, "CENA_HG"]
 	};
 	
-	if (IN_MODES("IWB_SW") && { HAS_TGTS(2) }) exitWith {	
+	if (IN_MODES("CENA_MG") && { HAS_TGTS(2) }) exitWith {	
 		private _tgt = GET_TGT(2);
-		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is IWB_SW ( %1 )", _tgt]; };
-		[true, _tgt, "IWB_SW"]
+		if (DEBUG) then { systemChat format ["SelectAttack: Attack mode is CENA_MG ( %1 )", _tgt]; };
+		[true, _tgt, "CENA_MG"]
 	};
 	
 	NO_ATTACK
 };
 
-dzn_fnc_iwb_GetTargets = {
+dzn_fnc_CENA_GetTargets = {
 	private _u = _this;
 	
 	private _filteredTargets = [];
@@ -82,9 +81,9 @@ dzn_fnc_iwb_GetTargets = {
 			}		
 		);
 	} forEach [ 
-		dzn_iwb_UGLAttackRange
-		, dzn_iwb_HGAttackRange
-		, dzn_iwb_SWAttackRange
+		dzn_CENA_UGLAttackRange
+		, dzn_CENA_HGAttackRange
+		, dzn_CENA_MGAttackRange
 	];
 	
 	_filteredTargets
@@ -94,13 +93,13 @@ dzn_fnc_iwb_GetTargets = {
 /**
 	Attack Sequences
  **/
-dzn_fnc_iwb_runAttackSequenceRemote = {
+dzn_fnc_CENA_runAttackSequenceRemote = {
 	params ["_u", "_sequenceParams", "_sequenceName"];
 	
 	private _seqFunction = switch toUpper(_sequenceName) do {
-		case "UGL": { "dzn_fnc_iwb_UGLAttack" };
-		case "HG": { "dzn_fnc_iwb_HGAttack" };
-		case "SW": { "dzn_fnc_iwb_Suppress" };
+		case "UGL": { "dzn_fnc_CENA_UGLAttack" };
+		case "HG": { "dzn_fnc_CENA_HGAttack" };
+		case "MG": { "dzn_fnc_CENA_Suppress" };
 	};
 	
 	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
@@ -109,29 +108,29 @@ dzn_fnc_iwb_runAttackSequenceRemote = {
 
 
 
-dzn_fnc_iwb_UGLAttack = {
+dzn_fnc_CENA_UGLAttack = {
 	params["_u","_tgt"];
 	
 	private _priWpn = primaryWeapon _u;
 	if (_priWpn == "") exitWith {};
 	
-	_u setVariable ["IWB_inSequence", true, true];
+	_u setVariable ["CENA_inSequence", true, true];
 	_u doWatch _tgt;
 	
 	private _allMags = primaryWeaponMagazine _u;	
 	if (
 		isNil {_allMags select 1} || 
-		( !isNil {_allMags select 1} && { !((_allMags select 1) in dzn_iwb_UGLRoundsList) } )
+		( !isNil {_allMags select 1} && { !((_allMags select 1) in dzn_CENA_UGLRoundsList) } )
 	) exitWith { 
 		_u selectWeapon _priWpn;
-		_u setVariable ["IWB_inSequence", false, true];
-		_u call dzn_fnc_iwb_GetUnitCombatAttributes;
+		_u setVariable ["CENA_inSequence", false, true];
+		_u call dzn_fnc_CENA_GetUnitCombatAttributes;
 	};
 	
 	// Targeting
 	private _dist = _u distance _tgt;
 	private _distanceError = _dist / (
-		if ( (_u getVariable ["IWB_UGL_LastTargetPos", [0,0,0]]) distance _tgt < 50 ) then { 10 } else { 5 }
+		if ( (_u getVariable ["CENA_UGL_LastTargetPos", [0,0,0]]) distance _tgt < 50 ) then { 10 } else { 5 }
 	);
 	private _tgtPos = (getPosATL _u) getPos [
 		_dist + random[ -1*_distanceError, (-1*_distanceError)/3, _distanceError]
@@ -165,8 +164,8 @@ dzn_fnc_iwb_UGLAttack = {
 	_u addMagazines [_mainMag, _magCount];
 	_u setAmmo [_priWpn, _curMagAmmo];
 	
-	_u setVariable ["IWB_inSequence", false, true];
-	_u setVariable ["IWB_UGL_LastTargetPos", getPosATL _tgt];
+	_u setVariable ["CENA_inSequence", false, true];
+	_u setVariable ["CENA_UGL_LastTargetPos", getPosATL _tgt];
 	deleteVehicle _tgtObj;
 	
 	_u setSkill ["aimingAccuracy", _skills select 0];
@@ -175,10 +174,10 @@ dzn_fnc_iwb_UGLAttack = {
 	if (DEBUG) then { systemChat "Out of sequence"; };
 };
 
-dzn_fnc_iwb_HGAttack = {
+dzn_fnc_CENA_HGAttack = {
 	params["_u","_tgt"];
 	
-	_u setVariable ["IWB_inSequence",true,true];
+	_u setVariable ["CENA_inSequence",true,true];
 	private _dir = _u getDir _tgt;
 	private _dist = _u distance _tgt;
 	
@@ -197,11 +196,11 @@ dzn_fnc_iwb_HGAttack = {
 		} forEach [4,5];
 	} forEach [0, -1, 1];
 	
-	if (_intersects) exitWith { _u setVariable ["IWB_inSequence", false, true];	 };
+	if (_intersects) exitWith { _u setVariable ["CENA_inSequence", false, true];	 };
 
 	_u doWatch _tgt;
 	_u doTarget _tgt;
-	_u setVariable ["IWB_HG_TargetRange", _dist, true];	
+	_u setVariable ["CENA_HG_TargetRange", _dist, true];	
 	
 	private _cancelTimer = time + 1;	
 	waitUntil {
@@ -218,21 +217,21 @@ dzn_fnc_iwb_HGAttack = {
 		}; 
 	};
 	
-	_u fire (_u getVariable "IWB_HGMuzzle");
+	_u fire (_u getVariable "CENA_HGMuzzle");
 	
 	sleep 1;
 	
 	_u selectWeapon (primaryWeapon _u);
 	_u switchMove "";
 	
-	_u setVariable ["IWB_inSequence", false, true];	
+	_u setVariable ["CENA_inSequence", false, true];	
 };
 
-dzn_fnc_iwb_Suppress = {
+dzn_fnc_CENA_Suppress = {
 	params["_u","_tgt"];	
-	_u setVariable ["IWB_inSequence",true,true];
+	_u setVariable ["CENA_inSequence",true,true];
 	
-	private _tgtPos = selectRandom ([_u, _tgt] call dzn_fnc_iwb_SelectSuppressPos);	
+	private _tgtPos = selectRandom ([_u, _tgt] call dzn_fnc_CENA_SelectSuppressPos);	
 	private _tgtObj = "Land_HelipadEmpty_F" createVehicleLocal _tgtPos;
 	_tgtObj setPosASL _tgtPos;
 	
@@ -241,10 +240,10 @@ dzn_fnc_iwb_Suppress = {
 	sleep round(random [8,10,13]);
 	
 	deleteVehicle _tgtObj;	
-	_u setVariable ["IWB_inSequence", false, true];		
+	_u setVariable ["CENA_inSequence", false, true];		
 };
 
-dzn_fnc_iwb_SelectSuppressPos = {
+dzn_fnc_CENA_SelectSuppressPos = {
 	params["_u","_tgt"];
 	
 	private _unitPos = getPos _u;
