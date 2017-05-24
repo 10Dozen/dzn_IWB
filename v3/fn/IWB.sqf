@@ -3,13 +3,15 @@ dzn_fnc_CENA_SelectAttackAndTarget = {
 	private _u = _this;
 	
 	if (
-		!simulationEnabled _u 
-		|| _u getVariable ["dzn_dynai_isCached", false] 
+		!simulationEnabled _u 		
 		|| vehicle _u != _u
 		|| side _u == civilian
+		
+		|| _u getVariable ["dzn_dynai_isCached", false] 		
 		|| _u getVariable ["ACE_isUnconscious", false]
 		|| _u getVariable ["ACE_isSurrendering", false]
 		|| _u getVariable ["ACE_isHandcuffed", false]
+		|| _u getVariable ["CENA_movingToCover", true]
 	)  exitWith {
 		if (DEBUG) then { systemChat "SelectAttack: Unit cached/not simulated!"; };
 		NO_ATTACK
