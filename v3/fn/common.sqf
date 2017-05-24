@@ -1,39 +1,42 @@
- dzn_fnc_IWB_setLongTimeout = {
-	_this setVariable ["IWB_LongTimeoutDone", false];
+ dzn_fnc_CENA_setLongTimeout = {
+	_this setVariable ["CENA_LongTimeoutDone", false];
 	_this spawn {
-		sleep dzn_iwb_SpecialAttackLongTimeout;
-		_this setVariable ["IWB_LongTimeoutDone", true];
+		sleep dzn_CENA_SpecialAttackLongTimeout;
+		_this setVariable ["CENA_LongTimeoutDone", true];
 	};
 };
 
-dzn_fnc_IWB_setShortTimeout = {
-	_this setVariable ["IWB_ShortTimeoutDone", false];
+dzn_fnc_CENA_setShortTimeout = {
+	_this setVariable ["CENA_ShortTimeoutDone", false];
 	_this spawn {
-		sleep dzn_iwb_SpecialAttackShortTimeout;
-		_this setVariable ["IWB_ShortTimeoutDone", true];
+		sleep dzn_CENA_SpecialAttackShortTimeout;
+		_this setVariable ["CENA_ShortTimeoutDone", true];
 	};
 };
 
-dzn_fnc_IWB_getShortTimeoutDone = { _this getVariable ["IWB_ShortTimeoutDone",false] };
+dzn_fnc_CENA_getShortTimeoutDone = { _this getVariable ["CENA_ShortTimeoutDone",false] };
 
-dzn_fnc_IWB_getLongTimeoutDone = { _this getVariable ["IWB_LongTimeoutDone",false] };
+dzn_fnc_CENA_getLongTimeoutDone = { _this getVariable ["CENA_LongTimeoutDone",false] };
 
-dzn_fnc_IWB_ToggleHandGrenadeEH = {
+dzn_fnc_CENA_ToggleHandGrenadeEH = {
 	params ["_u", "_add"];
 	private _eh = -1;
 	
 	if (!local _u) exitWith {
-		_this remoteExec ["dzn_fnc_IWB_ToggleHandGrenadeEH", _u];
+		_this remoteExec ["dzn_fnc_CENA_ToggleHandGrenadeEH", _u];
 	};
 	
 	if (_add) then {
 		_eh = _u addEventHandler [
 			"Fired"
 			, {
-				if !( (_this select 5) in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {};
+				params["_u","","","","","_round","_proj"];
+				if !(_round in (dzn_CENA_HGList apply {_x select 0})) exitWith {
+					// Other (UGL)
+				};
 				
-				private _proj = _this select 6;
-				private _dist = (_this select 0) getVariable ["IWB_HG_TargetRange", 15];
+				// Hand Grenades
+				private _dist = _u getVariable ["CENA_HG_TargetRange", 15];
 				private _velocity = [];
 				
 				if (_dist < 16) then {
@@ -53,9 +56,9 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 				_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
 			}
 		];
-		_u setVariable ["IWB_FireEH", _eh];
+		_u setVariable ["CENA_FireEH", _eh];
 	} else {
-		_u removeEventHandler ["Fired", _u getVariable ["IWB_FireEH",-1]];
-		_u setVariable ["IWB_FireEH", nil];
+		_u removeEventHandler ["Fired", _u getVariable ["CENA_FireEH",-1]];
+		_u setVariable ["CENA_FireEH", nil];
 	};
 };
