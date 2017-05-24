@@ -1,3 +1,8 @@
+/*
+ *	Combat Enhanced AI (CENA)
+ *	v.3
+ */
+
 dzn_CENA_Enabled 				= profileNamespace getVariable ["CENA_Enabled", true];
 
 if (!dzn_CENA_Enabled) exitWith {};
