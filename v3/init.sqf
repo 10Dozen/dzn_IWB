@@ -13,7 +13,6 @@ publicVariable "dzn_CENA_HGList";
 [] spawn {
 	waitUntil { time > 10 };
 	
-	dzn_CENA_CheckUnits = true;
 	while { dzn_CENA_Enabled } do {
 		private _allUnits = allUnits select { 
 			!(_x getVariable ["CENA_Running",false])
