@@ -1,6 +1,6 @@
 class CfgPatches
 {
-	class dzn_IWB
+	class dzn_CENA
 	{		
 		units[] = {};
 		weapons[] = {};
@@ -12,8 +12,8 @@ class CfgPatches
 
 class Extended_PostInit_EventHandlers
 {
-	class dzn_IWB
+	class dzn_CENA
 	{
-		init = "call ('\dzn_IWB\init.sqf' call SLX_XEH_COMPILE)";
+		init = "call ('\dzn_CENA\init.sqf' call SLX_XEH_COMPILE)";
 	};
 };
