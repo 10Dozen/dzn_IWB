@@ -15,7 +15,9 @@ dzn_fnc_IWB_setShortTimeout = {
 };
 
 dzn_fnc_IWB_getShortTimeoutDone = { _this getVariable ["IWB_ShortTimeoutDone",false] };
+
 dzn_fnc_IWB_getLongTimeoutDone = { _this getVariable ["IWB_LongTimeoutDone",false] };
+
 dzn_fnc_IWB_ToggleHandGrenadeEH = {
 	params ["_u", "_add"];
 	private _eh = -1;
