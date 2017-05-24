@@ -48,4 +48,4 @@ dzn_CENA_HGList 				= profileNamespace getVariable ["CENA_HGList", [
 ]];
 
 // Support weapon (MGs)
-dzn_CENA_SWAttackRange 			= profileNamespace getVariable ["CENA_HGAttackRange", [35, 500]];
+dzn_CENA_MGAttackRange 			= profileNamespace getVariable ["CENA_HGAttackRange", [35, 500]];
