@@ -58,7 +58,19 @@ dzn_fnc_CENA_FindCover = {
 	if (_cover isEqualTo []) exitWith {
 		sleep 5;
 		_u setVariable ["CENA_MovingInCover", false];
-	};
+	};	
+	
+	if (_cover isKindOf "House") then {
+		private _positions = [];
+		private _index = 0;
+		
+		while { !((_cover buildingPos _index) isEqualTo [0,0,0]) } do {
+			_positions = _positions + [_index];
+			_index = _index + 1;
+		};
+
+		_cover = selectRandom _positions;	
+	};	
 	
 	_u setVariable ["CENA_Cover", _cover select 0];	
 	_u doMove (getPosATL (_cover select 0));
