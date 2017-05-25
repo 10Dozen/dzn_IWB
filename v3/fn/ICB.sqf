@@ -34,6 +34,7 @@ dzn_fnc_CENA_FindCover = {
 	private _u = _this;
 	_u setVariable ["CENA_MovingInCover", true];
 	
+	// Search for COVER
 	private _nearestCovers = nearestTerrainObjects [
 		getPos _u
 		,  ["BUILDING", "HOUSE", "CHURCH", "CHAPEL", "BUNKER", "FORTRESS", "FOUNTAIN", "HOSPITAL", "RUIN", "TOURISM", "WATERTOWER","POWERSOLAR", "POWERWIND" ]
@@ -42,6 +43,7 @@ dzn_fnc_CENA_FindCover = {
 		, false
 	];
 	
+	// If none - searching for CONCEALMENT
 	if (_nearestCovers isEqualTo []) then {
 		_nearestCovers = nearestTerrainObjects [
 			getPos _u
@@ -52,32 +54,26 @@ dzn_fnc_CENA_FindCover = {
 		];
 	};
 	
+	// Non of cover or concelment - exit
 	if (_nearestCovers isEqualTo []) exitWith {};
 	
-	private _cover = _nearestCovers - [_u getVariable "CENA_Cover"];	
+	private _cover = selectRandom (_nearestCovers - [_u getVariable "CENA_Cover"]);	
 	if (_cover isEqualTo []) exitWith {
 		sleep 5;
 		_u setVariable ["CENA_MovingInCover", false];
 	};	
 	
+	// If cover is a house - select inside position
 	if (_cover isKindOf "House") then {
-		private _positions = [];
-		private _index = 0;
-		
-		while { !((_cover buildingPos _index) isEqualTo [0,0,0]) } do {
-			_positions = _positions + [_index];
-			_index = _index + 1;
-		};
-
-		_cover = selectRandom _positions;	
+		_cover = selectRandom ([_cover] call BIS_fnc_buildingPositions);	
 	};	
 	
-	_u setVariable ["CENA_Cover", _cover select 0];	
-	_u doMove (getPosATL (_cover select 0));
+	// Move to cover with speed boost
+	_u setVariable ["CENA_Cover", _cover];	
+	_u doMove (getPosATL _cover);
 	
 	waitUntil { 
 		sleep 0.5; 
-		// _u setUnitPos "UP";
 		_u setAnimSpeedCoef 1.5;
 		_u distance (_cover select 0) < 5
 	};
@@ -86,6 +82,8 @@ dzn_fnc_CENA_FindCover = {
 };
 
 dzn_CENA_fnc_ScheduleContactReport = {
+	private _targets = 
+
 	sleep 30;
 	if !(alive _this) exitWith {};
 	if (_this getVariable ["CENA_ContactsToReport", []] isEqualTo []) exitWith {};
