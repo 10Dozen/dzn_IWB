@@ -72,3 +72,8 @@ dzn_fnc_CENA_FindCover = {
 	
 	_this setVariable ["CENA_MovingInCover", false];
 };
+
+dzn_CENA_fnc_ScheduleContactReport = {
+
+
+};
