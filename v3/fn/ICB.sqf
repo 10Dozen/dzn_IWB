@@ -82,11 +82,9 @@ dzn_fnc_CENA_FindCover = {
 };
 
 dzn_CENA_fnc_ScheduleContactReport = {
-	private _targets = 
-
 	sleep 30;
 	if !(alive _this) exitWith {};
-	if (_this getVariable ["CENA_ContactsToReport", []] isEqualTo []) exitWith {};
+	if (_this getVariable ["CENA_KnownTargets", []] isEqualTo []) exitWith {};
 	
 	{
 		if (_x distance2d _this < 1000) then {
@@ -100,6 +98,4 @@ dzn_CENA_fnc_ScheduleContactReport = {
 		&& side _x == side _this 
 		&& leader (group _x) == _x
 	});
-	
-	_this setVariable ["CENA_ContactsToReport", []];
 };
