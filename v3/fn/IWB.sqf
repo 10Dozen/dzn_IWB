@@ -69,17 +69,20 @@ dzn_fnc_CENA_GetTargets = {
 	private _u = _this;
 	
 	private _filteredTargets = [];
-	private _targets = _u targetsQuery [objNull, sideEnemy, "", [], 0];
-	//	[1,gl1,GUER,"I_Soldier_GL_F",[6750.39,5563.42],-1]
+	
+	// targetsQuery returns: [1,gl1,GUER,"I_Soldier_GL_F",[6750.39,5563.42],-1]
+	private _targets = (_u targetsQuery [objNull, sideEnemy, "", [], 0]) select {
+		alive (_x select 3)
+		&& (_x select 3) isKindOf "CAManBase" 
+		&& !((side (_x select 1)) in [side _u, civilian])	
+	};
 	
 	{
 		private _rng = _x;
 		_filteredTargets pushBack (
 			_targets select {
-				(_x select 3) isKindOf "CAManBase" 
-				&& _u distance (_x select 1) >= (_rng select 0)
+				_u distance (_x select 1) >= (_rng select 0)
 				&& _u distance (_x select 1) <= (_rng select 1)
-				&& !((side (_x select 1)) in [side _u, civilian])
 			}		
 		);
 	} forEach [ 
@@ -88,13 +91,20 @@ dzn_fnc_CENA_GetTargets = {
 		, dzn_CENA_MGAttackRange
 	];
 	
+	_this setVariable ["CENA_KnownTargets", _targets];
+	
 	_filteredTargets
 };
 
 
-/**
-	Attack Sequences
- **/
+
+
+/*
+ *
+ *  Attack sequences
+ *
+ */
+ 
 dzn_fnc_CENA_runAttackSequenceRemote = {
 	params ["_u", "_sequenceParams", "_sequenceName"];
 	
@@ -106,9 +116,6 @@ dzn_fnc_CENA_runAttackSequenceRemote = {
 	
 	[_u, _sequenceParams] remoteExec [_seqFunction, _u];	
 };
-
-
-
 
 dzn_fnc_CENA_UGLAttack = {
 	params["_u","_tgt"];
