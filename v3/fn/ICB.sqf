@@ -74,6 +74,22 @@ dzn_fnc_CENA_FindCover = {
 };
 
 dzn_CENA_fnc_ScheduleContactReport = {
-
-
+	sleep 30;
+	if !(alive _this) exitWith {};
+	if (_this getVariable ["CENA_ContactsToReport", []] isEqualTo []) exitWith {};
+	
+	{
+		if (_x distance2d _this < 1000) then {
+			private _sl = _x;
+			{
+				_sl reveal [_x, 1.5];
+			} forEach (_this getVariable ["CENA_ContactsToReport]);
+		};
+	} forEach (allUnits select {
+		alive _x
+		&& side _x == side _this 
+		&& leader (group _x) == _x
+	});
+	
+	_this setVariable ["CENA_ContactsToReport", []];
 };
