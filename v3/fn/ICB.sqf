@@ -91,7 +91,7 @@ dzn_CENA_fnc_ScheduleContactReport = {
 			private _sl = _x;
 			{
 				_sl reveal [_x, 1.5];
-			} forEach (_this getVariable ["CENA_ContactsToReport]);
+			} forEach (_this getVariable "CENA_ContactsToReport");
 		};
 	} forEach (allUnits select {
 		alive _x

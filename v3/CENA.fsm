@@ -1,0 +1,472 @@
+/*%FSM<COMPILE "E:\GMZ\STEAM\SteamApps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, CENA">*/
+/*%FSM<HEAD>*/
+/*
+item0[] = {"Start",0,250,-50.000000,-1125.000000,50.000000,-1075.000000,0.000000,"Start"};
+item1[] = {"Timer",4,218,-50.000000,-1025.000000,50.000000,-975.000000,0.000000,"Timer"};
+item2[] = {"",7,210,-229.000000,-379.000000,-221.000000,-371.000000,0.000000,""};
+item3[] = {"",7,210,-229.000000,-854.000000,-221.000000,-846.000000,0.000000,""};
+item4[] = {"",7,210,-229.000000,-1004.000000,-221.000000,-996.000000,0.000000,""};
+item5[] = {"",7,210,-204.000000,-779.000000,-195.999985,-771.000000,0.000000,""};
+item6[] = {"",7,210,-204.000000,-454.000000,-196.000000,-446.000000,0.000000,""};
+item7[] = {"Get_Attributes_",2,250,-50.000000,-950.000000,50.000000,-900.000000,0.000000,"Get Attributes &" \n "Contact Report"};
+item8[] = {"Get_Fire__Attrib",2,250,-50.000000,-800.000000,50.000000,-750.000000,0.000000,"Get Fire " \n "Attributes"};
+item9[] = {"Short_Timer",4,218,-50.000000,-875.000000,50.000000,-825.000000,0.000000,"Short Timer"};
+item10[] = {"UGL",4,218,-175.000000,-625.000000,-75.000000,-575.000000,3.000000,"UGL"};
+item11[] = {"Hand_Grenade",4,218,-50.000000,-625.000000,50.000000,-575.000000,2.000000,"Hand Grenade"};
+item12[] = {"Support_Weapon",4,218,75.000000,-625.000000,175.000000,-575.000000,2.000000,"Support Weapon"};
+item13[] = {"UGL_Attack",2,250,-175.000000,-550.000000,-75.000000,-500.000000,0.000000,"UGL Attack"};
+item14[] = {"HG_Attack",2,250,-50.000000,-550.000000,50.000000,-500.000000,0.000000,"HG Attack"};
+item15[] = {"Support_Weapon_A",2,250,75.000000,-550.000000,175.000000,-500.000000,0.000000,"Support Weapon" \n "Attack"};
+item16[] = {"Nah___",4,218,-50.000000,-475.000000,50.000000,-425.000000,0.000000,"Nah..."};
+item17[] = {"Set_Loop_Timer",2,250,-50.000000,-400.000000,50.000000,-350.000000,0.000000,"Set Loop" \n "Timer"};
+item18[] = {"Dead",4,218,525.000000,-950.000000,625.000000,-900.000000,9.000000,"Dead"};
+item19[] = {"End",1,250,525.000000,-1025.000000,625.000000,-975.000000,0.000000,"End"};
+item20[] = {"",7,210,-4.000000,-304.000000,4.000000,-296.000000,0.000000,""};
+item21[] = {"Under_FIre",4,218,425.000000,-800.000000,525.000000,-750.000000,1.000000,"Under FIre"};
+item22[] = {"Reaction",2,250,425.000000,-725.000000,525.000000,-675.000000,0.000000,"Reaction"};
+item23[] = {"Is_MG_",4,218,250.000000,-550.000000,350.000000,-500.000000,1.000000,"Is MG?"};
+item24[] = {"TIme_to_hide",4,218,425.000000,-625.000000,525.000000,-575.000000,0.000000,"TIme to hide"};
+item25[] = {"Move_to_Cover",2,250,425.000000,-550.000000,525.000000,-500.000000,0.000000,"Move to Cover"};
+item26[] = {"",7,210,-229.000000,-1004.000000,-220.999985,-996.000000,0.000000,""};
+item27[] = {"",7,210,571.000061,-304.000000,579.000000,-296.000000,0.000000,""};
+item28[] = {"true",4,218,425.000000,-400.000000,525.000000,-350.000000,0.000000,"true"};
+link0[] = {0,1};
+link1[] = {1,7};
+link2[] = {2,3};
+link3[] = {3,9};
+link4[] = {3,26};
+link5[] = {5,6};
+link6[] = {6,16};
+link7[] = {7,9};
+link8[] = {7,18};
+link9[] = {8,5};
+link10[] = {8,10};
+link11[] = {8,11};
+link12[] = {8,12};
+link13[] = {8,21};
+link14[] = {9,8};
+link15[] = {10,13};
+link16[] = {11,14};
+link17[] = {12,15};
+link18[] = {13,16};
+link19[] = {14,16};
+link20[] = {15,16};
+link21[] = {16,17};
+link22[] = {17,2};
+link23[] = {17,20};
+link24[] = {18,19};
+link25[] = {20,27};
+link26[] = {21,22};
+link27[] = {22,23};
+link28[] = {22,24};
+link29[] = {23,15};
+link30[] = {24,25};
+link31[] = {25,28};
+link32[] = {26,1};
+link33[] = {27,18};
+link34[] = {28,17};
+globals[] = {0.000000,0,0,0,0,640,480,1,316,6316128,1,-235.332275,693.839661,-150.170776,-1185.355347,531,664,1};
+window[] = {0,-1,-1,-1,-1,910,843,1903,75,1,549};
+*//*%FSM</HEAD>*/
+class FSM
+{
+        fsmName = "CENA";
+        class States
+        {
+                /*%FSM<STATE "Start">*/
+                class Start
+                {
+                        name = "Start";
+                        itemno = 0;
+                        init = /*%FSM<STATEINIT""">*/"private[" \n
+                         "	""_unit""	" \n
+                         "	,""_tgtConditions"",""_tgt"",""_attack"",""_mode""" \n
+                         "	,""_debug""" \n
+                         "	,""_longTimer"",""_shortTimer""" \n
+                         "];" \n
+                         "" \n
+                         "_unit = _this;" \n
+                         "_debug = false;" \n
+                         "" \n
+                         "_unit call dzn_fnc_CENA_setLongTimeout;" \n
+                         "" \n
+                         "_unit spawn dzn_fnc_CENA_SetSuppressionAttributes;" \n
+                         "_unit spawn dzn_fnc_CENA_SetHandGrenadeEH;" \n
+                         "" \n
+                         "if (_debug) then { systemChat ""CENA (0) started""; };"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Timer">*/
+                                class Timer
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="Get_Attributes_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getLongTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Get_Attributes_">*/
+                class Get_Attributes_
+                {
+                        name = "Get_Attributes_";
+                        itemno = 7;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""CENA (1) Get Attributes & Contact report""; };" \n
+                         "" \n
+                         "// Combat attributes" \n
+                         "_unit call dzn_fnc_CENA_GetUnitCombatAttributes;" \n
+                         "_unit setVariable [""CENA_InContact"", -1];" \n
+                         "" \n
+                         "// Timeouts" \n
+                         "_unit call dzn_fnc_CENA_setLongTimeout;" \n
+                         "_unit call dzn_fnc_CENA_setShortTimeout;" \n
+                         "" \n
+                         "// Contact report" \n
+                         "_unit spawn dzn_CENA_fnc_ScheduleContactReport;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dead">*/
+                                class Dead
+                                {
+                                        itemno = 18;
+                                        priority = 9.000000;
+                                        to="End";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Short_Timer">*/
+                                class Short_Timer
+                                {
+                                        itemno = 9;
+                                        priority = 0.000000;
+                                        to="Get_Fire__Attrib";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)" \n
+                                         "&&" \n
+                                         "(_unit call dzn_fnc_CENA_CheckUnitProcessable)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Get_Fire__Attrib">*/
+                class Get_Fire__Attrib
+                {
+                        name = "Get_Fire__Attrib";
+                        itemno = 8;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""CENA (2) Getting fire attributes""; };" \n
+                         "" \n
+                         "_tgtConditions = _unit call dzn_fnc_CENA_SelectAttackAndTarget;" \n
+                         "" \n
+                         "_attack = _tgtConditions select 0;" \n
+                         "_unit setVariable [""CENA_Attack"", _tgtConditions];" \n
+                         "" \n
+                         "if (_attack) then {" \n
+                         "	_tgt = _tgtConditions select 1;" \n
+                         "	_mode = _tgtConditions select 2;" \n
+                         "	" \n
+                         "	if (_debug) then { systemChat format [""CENA (2.1) Prepare to attack %1 with %2"",_tgt,_mode]; };" \n
+                         "} else {" \n
+                         "	if (_debug) then { systemChat ""CENA (2.1) No attack""; };" \n
+                         "};" \n
+                         "" \n
+                         "_unit call dzn_fnc_CENA_setShortTimeout;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "UGL">*/
+                                class UGL
+                                {
+                                        itemno = 10;
+                                        priority = 3.000000;
+                                        to="UGL_Attack";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""CENA_UGL"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Support_Weapon">*/
+                                class Support_Weapon
+                                {
+                                        itemno = 12;
+                                        priority = 2.000000;
+                                        to="Support_Weapon_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""CENA_MG"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Hand_Grenade">*/
+                                class Hand_Grenade
+                                {
+                                        itemno = 11;
+                                        priority = 2.000000;
+                                        to="HG_Attack";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"_attack && { _mode == ""CENA_HG"" }"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Under_FIre">*/
+                                class Under_FIre
+                                {
+                                        itemno = 21;
+                                        priority = 1.000000;
+                                        to="Reaction";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(" \n
+                                         "	(" \n
+                                         "		getSuppression _u > 0 " \n
+                                         "		&& " \n
+                                         "		isNull (_u getVariable ""CENA_Cover"")" \n
+                                         "	) " \n
+                                         "	|| (getSuppression _u > 0.75)" \n
+                                         ")" \n
+                                         "&&" \n
+                                         "!(_u getVariable [""CENA_MovingInCover"", false])"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "UGL_Attack">*/
+                class UGL_Attack
+                {
+                        name = "UGL_Attack";
+                        itemno = 13;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (3) Attacking UGL""; };" \n
+                         "" \n
+                         "[_unit, _tgt, ""UGL""] call dzn_fnc_CENA_runAttackSequenceRemote;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "HG_Attack">*/
+                class HG_Attack
+                {
+                        name = "HG_Attack";
+                        itemno = 14;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""CENA (3) Attacking HG""; };" \n
+                         "" \n
+                         "[_unit, _tgt, ""HG""] call dzn_fnc_CENA_runAttackSequenceRemote;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Support_Weapon_A">*/
+                class Support_Weapon_A
+                {
+                        name = "Support_Weapon_A";
+                        itemno = 15;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""CENA (3) Machinegun attack""; };" \n
+                         "" \n
+                         "[_unit, _tgt, ""MF""] call dzn_fnc_CENA_runAttackSequenceRemote;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Nah___">*/
+                                class Nah___
+                                {
+                                        itemno = 16;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Set_Loop_Timer">*/
+                class Set_Loop_Timer
+                {
+                        name = "Set_Loop_Timer";
+                        itemno = 17;
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""CENA (5) Sequence done""; };" \n
+                         "" \n
+                         "_unit call dzn_fnc_CENA_setShortTimeout;" \n
+                         ""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Dead">*/
+                                class Dead
+                                {
+                                        itemno = 18;
+                                        priority = 9.000000;
+                                        to="End";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(!alive _unit)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Timer">*/
+                                class Timer
+                                {
+                                        itemno = 1;
+                                        priority = 0.000000;
+                                        to="Get_Attributes_";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getLongTimeoutDone)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "Short_Timer">*/
+                                class Short_Timer
+                                {
+                                        itemno = 9;
+                                        priority = 0.000000;
+                                        to="Get_Fire__Attrib";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit call dzn_fnc_CENA_getShortTimeoutDone)" \n
+                                         "&&" \n
+                                         "(_unit call dzn_fnc_CENA_CheckUnitProcessable)"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "End">*/
+                class End
+                {
+                        name = "End";
+                        itemno = 19;
+                        init = /*%FSM<STATEINIT""">*/""/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Reaction">*/
+                class Reaction
+                {
+                        name = "Reaction";
+                        itemno = 22;
+                        init = /*%FSM<STATEINIT""">*/"_unit setVariable [" \n
+                         "	""CENA_InContact""" \n
+                         "	, 1 + _unit getVariable [""CENA_InContact"",0]" \n
+                         "];" \n
+                         "" \n
+                         "if !(combatMode (group _unit) in [""RED"",""YELLOW""]) then {" \n
+                         "	(group _unit) setCombatMode ""RED"";" \n
+                         "	(group _unit) setSpeedMode ""FULL"";" \n
+                         "};" \n
+                         "" \n
+                         "_unit call dzn_fnc_CENA_ProvideSuppressEffect;" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "" \n
+                         "				"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "Is_MG_">*/
+                                class Is_MG_
+                                {
+                                        itemno = 23;
+                                        priority = 1.000000;
+                                        to="Support_Weapon_A";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"(_unit getVariable [""CENA_MG"", false]) " \n
+                                         "&&" \n
+                                         "(_unit getVariable [""CENA_InContact"", 0] == 0)" \n
+                                         ""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                                /*%FSM<LINK "TIme_to_hide">*/
+                                class TIme_to_hide
+                                {
+                                        itemno = 24;
+                                        priority = 0.000000;
+                                        to="Move_to_Cover";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/"true"/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+                /*%FSM<STATE "Move_to_Cover">*/
+                class Move_to_Cover
+                {
+                        name = "Move_to_Cover";
+                        itemno = 25;
+                        init = /*%FSM<STATEINIT""">*/"_unit spawn dzn_fnc_CENA_FindCover;"/*%FSM</STATEINIT""">*/;
+                        precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
+                        class Links
+                        {
+                                /*%FSM<LINK "true">*/
+                                class true
+                                {
+                                        itemno = 28;
+                                        priority = 0.000000;
+                                        to="Set_Loop_Timer";
+                                        precondition = /*%FSM<CONDPRECONDITION""">*/""/*%FSM</CONDPRECONDITION""">*/;
+                                        condition=/*%FSM<CONDITION""">*/""/*%FSM</CONDITION""">*/;
+                                        action=/*%FSM<ACTION""">*/""/*%FSM</ACTION""">*/;
+                                };
+                                /*%FSM</LINK>*/
+                        };
+                };
+                /*%FSM</STATE>*/
+        };
+        initState="Start";
+        finalStates[] =
+        {
+                "End",
+        };
+};
+/*%FSM</COMPILE>*/

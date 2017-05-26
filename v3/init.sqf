@@ -23,10 +23,10 @@ publicVariable "dzn_CENA_HGList";
 		
 		{
 			_x setVariable ["CENA_Running",true];
-			_x execFSM "\dzn_IWB\IWB.fsm";				
+			_x execFSM "\dzn_CENA\CENA.fsm";				
 			sleep 1;
 		} forEach _allUnits;
-			
+		
 		sleep dzn_CENA_CheckUnitLoopTimeout;	
 	};
 };

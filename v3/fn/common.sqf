@@ -1,4 +1,4 @@
- dzn_fnc_CENA_setLongTimeout = {
+dzn_fnc_CENA_setLongTimeout = {
 	_this setVariable ["CENA_LongTimeoutDone", false];
 	_this spawn {
 		sleep dzn_CENA_SpecialAttackLongTimeout;
@@ -17,6 +17,16 @@ dzn_fnc_CENA_setShortTimeout = {
 dzn_fnc_CENA_getShortTimeoutDone = { _this getVariable ["CENA_ShortTimeoutDone",false] };
 
 dzn_fnc_CENA_getLongTimeoutDone = { _this getVariable ["CENA_LongTimeoutDone",false] };
+
+dzn_fnc_CENA_CheckUnitProcessable = {
+	simulationEnabled _this		
+	|| vehicle _this == _this
+	|| side _this != civilian
+	|| !(_this getVariable ["dzn_dynai_isCached", false])
+	|| !(_this getVariable ["ACE_isUnconscious", false])
+	|| !(_this getVariable ["ACE_isSurrendering", false])
+	|| !(_this getVariable ["ACE_isHandcuffed", false])
+};
 
 dzn_fnc_CENA_GetUnitCombatAttributes = {
 	private _u = _this;
@@ -83,12 +93,12 @@ dzn_fnc_CENA_SetHandGrenadeEH = {
 	];
 	
 	[_u, _eh] spawn {
-		waitUntil { sleep 5; !alive (_this select 0)};		
+		waitUntil { sleep 10; !alive (_this select 0)};		
 		(_this select 0) removeEventHandler ["Fired", (_this select 1)];
 	};
 };
 
-dzn_fnc_CENA_SetSuppressionHandler =  {
+dzn_fnc_CENA_SetSuppressionAttributes =  {
 	private _u = _this;
 	
 	if (side _u == civilian) exitWith {};	
@@ -96,34 +106,4 @@ dzn_fnc_CENA_SetSuppressionHandler =  {
 	
 	_u setVariable ["CENA_Cover", objNull];
 	_u setVariable ["CENA_Skills", [_u skill "aimingAccuracy", _u skill "aimingShake", _u skill "aimingSpeed", _u skill "reloadSpeed"]];
-	
-	while { alive _u } do {
-		if (
-			simulationEnabled _u			
-			|| vehicle _u == _u
-			|| side _u != civilian
-			
-			|| !(_u getVariable ["dzn_dynai_isCached", false])
-			|| !(_u getVariable ["ACE_isUnconscious", false])
-			|| !(_u getVariable ["ACE_isSurrendering", false])
-			|| !(_u getVariable ["ACE_isHandcuffed", false])
-		) then {		
-			if (
-				( 
-					(getSuppression _u > 0 	&& isNull (_u getVariable "CENA_Cover")) 
-					|| (getSuppression _u > 0.75) 
-				)
-				&& !(_u getVariable ["CENA_MovingInCover", false])
-			) then {	
-				_u spawn dzn_fnc_CENA_FindCover;
-				if !(combatMode (group _u) in ["RED","YELLOW"]) then {
-					(group _u) setCombatMode "RED";
-					(group _u) setSpeedMode "FULL";
-				};
-			};
-
-			_u call dzn_fnc_CENA_ProvideSuppressEffect;
-		};
-		sleep 1;
-	};
 };
