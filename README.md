@@ -16,6 +16,7 @@ Task:
 Task:
   - Refactor
   - Add UGL dispersion
+  - Reveal targets between groups
 
 Bugs/Features:
   - Suppress attack: Remeber last target and if no new targets and target alive and in range -> use as new target
