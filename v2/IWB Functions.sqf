@@ -33,27 +33,40 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 		_eh = _u addEventHandler [
 			"Fired"
 			, {
-				if !( (_this select 5) in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {};
-				
-				private _proj = _this select 6;
-				private _dist = (_this select 0) getVariable ["IWB_HG_TargetRange", 15];
-				private _velocity = [];
-				
-				if (_dist < 16) then {
-					_velocity = [0,8 + random [-0.75, 0, 0.75] ,10];
-				} else {				
-					if (_dist < 23) then {
-						_velocity = [0,10 + random [-1, 0, 1],10]
-					} else {
-						if (_dist < 30) then {
-							_velocity = [0,12 + random [-1.25, 0, 1.25],10]
-						} else {
-							_velocity = [0,16 + random [-1.25, 0, 1.5],10]
-						};
-					};
+				// 	Underbarrel Grenade
+				if ( (_this select 5) in dzn_iwb_UGLRoundsList ) exitWith {
+					private _proj = _this select 6;					
+					private _vel = velocityModelSpace _proj;	
+					
+					_proj setVelocityModelSpace [
+						(_vel select 0) + (random 1.5) * selectRandom[1,-1]
+						, (_vel select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
+						, (_vel select 2)					
+					];
 				};
 				
-				_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
+				// 	Hand Grenade 
+				if ( (_this select 5) in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {
+					private _proj = _this select 6;
+					private _dist = (_this select 0) getVariable ["IWB_HG_TargetRange", 15];
+					private _velocity = [];
+					
+					if (_dist < 16) then {
+						_velocity = [0,8 + random [-0.75, 0, 0.75] ,10];
+					} else {				
+						if (_dist < 23) then {
+							_velocity = [0,10 + random [-1, 0, 1],10]
+						} else {
+							if (_dist < 30) then {
+								_velocity = [0,12 + random [-1.25, 0, 1.25],10]
+							} else {
+								_velocity = [0,16 + random [-1.25, 0, 1.5],10]
+							};
+						};
+					};
+					
+					_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
+				};
 			}
 		];
 		_u setVariable ["IWB_FireEH", _eh];

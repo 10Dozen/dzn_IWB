@@ -50,7 +50,7 @@ link24[] = {17,20};
 link25[] = {18,19};
 link26[] = {20,18};
 globals[] = {0.000000,0,0,0,0,640,480,1,292,6316128,1,-608.063965,646.648071,-213.148926,-1314.756348,989,885,1};
-window[] = {2,-1,-1,-1,-1,836,75,1413,75,3,1007};
+window[] = {2,-1,-1,-1,-1,986,225,1563,225,3,1007};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -74,6 +74,7 @@ class FSM
                          "" \n
                          "_unit call dzn_fnc_iwb_setLongTimeout;" \n
                          "_unit spawn dzn_fnc_icb_SetSuppressionHandler;" \n
+                         "[_unit, true] call dzn_fnc_IWB_ToggleHandGrenadeEH;" \n
                          "" \n
                          "if (_debug) then { systemChat ""IWB (0) started""; };"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
