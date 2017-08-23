@@ -179,7 +179,7 @@ dzn_fnc_iwb_GetTargets = {
 	private _u = _this;
 	
 	private _filteredTargets = [];
-	private _targets = _u targetsQuery [objNull, sideEnemy, "", [], 0];
+	private _targets = ( _u targetsQuery [objNull, sideEnemy, "", [], 0] ) select { [side _u, _x select 2] call BIS_fnc_sideIsEnemy };
 	//	[1,gl1,GUER,"I_Soldier_GL_F",[6750.39,5563.42],-1]
 	
 	{
@@ -189,7 +189,6 @@ dzn_fnc_iwb_GetTargets = {
 				(_x select 3) isKindOf "CAManBase" 
 				&& _u distance (_x select 1) >= (_rng select 0)
 				&& _u distance (_x select 1) <= (_rng select 1)
-				&& !((side (_x select 1)) in [side _u, civilian])
 			}		
 		);
 	} forEach [ 
