@@ -1,14 +1,14 @@
 /*%FSM<COMPILE "E:\GMZ\STEAM\SteamApps\common\Arma 3 Tools\FSMEditor\scriptedFSM.cfg, IWB">*/
 /*%FSM<HEAD>*/
 /*
-item0[] = {"Start",0,250,-50.000000,-1125.000000,50.000000,-1075.000000,0.000000,"Start"};
+item0[] = {"Start",0,4346,-50.000000,-1125.000000,50.000000,-1075.000000,0.000000,"Start"};
 item1[] = {"Timer",4,218,-50.000000,-1025.000000,50.000000,-975.000000,0.000000,"Timer"};
 item2[] = {"",7,210,-254.000000,-404.000000,-246.000000,-396.000000,0.000000,""};
 item3[] = {"",7,210,-254.000000,-854.000000,-246.000000,-846.000000,0.000000,""};
 item4[] = {"",7,210,-254.000000,-1004.000000,-246.000000,-996.000000,0.000000,""};
 item5[] = {"",7,210,196.000000,-779.000000,204.000015,-771.000000,0.000000,""};
 item6[] = {"",7,210,196.000000,-479.000000,204.000000,-471.000000,0.000000,""};
-item7[] = {"Get_Attributes",2,4346,-50.000000,-950.000000,50.000000,-900.000000,0.000000,"Get Attributes"};
+item7[] = {"Get_Attributes",2,250,-50.000000,-950.000000,50.000000,-900.000000,0.000000,"Get Attributes"};
 item8[] = {"Get_Fire__Attrib",2,250,-50.000000,-800.000000,50.000000,-750.000000,0.000000,"Get Fire " \n "Attributes"};
 item9[] = {"Short_Timer",4,218,-50.000000,-875.000000,50.000000,-825.000000,0.000000,"Short Timer"};
 item10[] = {"UGL",4,218,-175.000000,-700.000000,-75.000000,-650.000000,3.000000,"UGL"};
@@ -49,8 +49,8 @@ link23[] = {17,2};
 link24[] = {17,20};
 link25[] = {18,19};
 link26[] = {20,18};
-globals[] = {0.000000,0,0,0,0,640,480,1,292,6316128,1,-332.474396,466.291656,-140.988770,-1175.456665,671,869,1};
-window[] = {0,-1,-1,-1,-1,903,528,1866,142,1,689};
+globals[] = {0.000000,0,0,0,0,640,480,1,292,6316128,1,-476.811584,401.830902,-429.306152,-1201.882935,626,713,1};
+window[] = {0,-1,-1,-1,-1,1041,167,1307,157,1,644};
 *//*%FSM</HEAD>*/
 class FSM
 {
@@ -143,12 +143,11 @@ class FSM
                          "_tgtConditions = _unit call dzn_fnc_iwb_SelectAttackAndTarget;" \n
                          "" \n
                          "_attack = _tgtConditions select 0;" \n
+                         "_tgt = _tgtConditions select 1;" \n
+                         "_mode = _tgtConditions select 2;" \n
                          "_unit setVariable [""IWB_Attack"", _tgtConditions];" \n
                          "" \n
                          "if (_attack) then {" \n
-                         "	_tgt = _tgtConditions select 1;" \n
-                         "	_mode = _tgtConditions select 2;" \n
-                         "	" \n
                          "	if (_debug) then { systemChat format [""IWB (2.1) Prepare to attack %1 with %2"",_tgt,_mode]; };" \n
                          "} else {" \n
                          "	if (_debug) then { systemChat ""IWB (2.1) No attack""; };" \n
@@ -246,7 +245,7 @@ class FSM
                 {
                         name = "HG_Attack";
                         itemno = 14;
-                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""ICB (3) Attacking HG""; };" \n
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (3) Attacking HG""; };" \n
                          "" \n
                          "[_unit, _tgt, ""HG""] call dzn_fnc_iwb_runAttackSequenceRemote;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
@@ -271,7 +270,7 @@ class FSM
                 {
                         name = "Support_Weapon_A";
                         itemno = 15;
-                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""ICB (3) Support Weapon attack""; };" \n
+                        init = /*%FSM<STATEINIT""">*/"if (_debug) then { systemChat ""IWB (3) Support Weapon attack""; };" \n
                          "" \n
                          "[_unit, _tgt, ""SW""] call dzn_fnc_iwb_runAttackSequenceRemote;"/*%FSM</STATEINIT""">*/;
                         precondition = /*%FSM<STATEPRECONDITION""">*/""/*%FSM</STATEPRECONDITION""">*/;
