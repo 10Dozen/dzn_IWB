@@ -61,8 +61,10 @@ dzn_fnc_icb_ProvideSuppressEffect = {
 	
 	if (_supression < 0.2) exitWith {
 		[_u, 1] call dzn_fnc_icb_SetSkillAffected;
+		_u setVariable ["ICB_Suppressed", false];
 	};
 	
+	_u setVariable ["ICB_Suppressed", true];
 	switch (true) do {
 		case (_supression > 0.5): {
 			[_u, 0.5] call dzn_fnc_icb_SetSkillAffected;

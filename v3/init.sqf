@@ -1,12 +1,14 @@
+
+
 /*
  *	Infantry Weapon Behavior
- *	v.3
+ *	v.3.1
  */
 
 call compile preProcessFileLineNumbers "\dzn_IWB\IWB Functions.sqf";
 call compile preProcessFileLineNumbers "\dzn_IWB\ICB Functions.sqf";
 
-if !(isServer) exitWith {};
+// if !(isServer) exitWith {};
 
 [] spawn {
 	waitUntil { time > 0 };
@@ -28,8 +30,8 @@ if !(isServer) exitWith {};
 			};
 			
 			{
-				_x call dzn_fnc_iwb_EnableUnit;
-				_x execFSM "\dzn_IWB\IWB.fsm";
+				_x setVariable ["IWB_Running", true];
+				_x execFSM "IWB.fsm";
 				
 				sleep 1;
 			} forEach _allUnits;

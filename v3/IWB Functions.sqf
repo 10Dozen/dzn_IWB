@@ -33,15 +33,59 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 		_eh = _u addEventHandler [
 			"Fired"
 			, {
-				// 	Underbarrel Grenade
-				if ( (_this select 5) in dzn_iwb_UGLRoundsList ) exitWith {
-					private _proj = _this select 6;					
-					private _vel = velocityModelSpace _proj;	
-					
+				params[
+					"_unit"
+					, "_weapon"
+					, "_muzzle"
+					, "_mode"
+					, "_ammo"
+					, "_magazine"
+					, "_proj"
+					, "_gunner"			
+				];
+				
+				private _originalVelocity = velocityModelSpace _proj;
+				
+				// Blind firing
+				private _intersectObjects = lineIntersectsObjs [
+					eyePos _unit
+					, ATLtoASL ((assignedTarget _unit) modelToWorld ((assignedTarget _unit)  selectionPosition "pelvis"))
+					, objNull
+					, _unit
+					, false
+					, 32
+				];
+				
+				if !(_intersectObjects isEqualTo []) then {
+					private _d = _unit distance (_intersectObjects select 0);					
+					private _multiplier = switch (true) do {
+						case (_d < 50): { 60 };
+						case (_d < 100): { 45 };
+						case (_d > 100): { 30 };					
+					};
+
 					_proj setVelocityModelSpace [
-						(_vel select 0) + (random 1.5) * selectRandom[1,-1]
-						, (_vel select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
-						, (_vel select 2)					
+						(_originalVelocity select 0) + random(_multiplier)*selectRandom [1,-1]
+						, (_originalVelocity select 1) 
+						, (_originalVelocity select 2) + random(10)*selectRandom [1,-1]
+					];
+				};
+				
+				// Suppressed
+				if (_unit getVariable ["ICB_Suppressed", false]) then {
+					_proj setVelocityModelSpace [
+						(_originalVelocity select 0) + random(45)*selectRandom [1,-1]
+						, (_originalVelocity select 1) 
+						, (_originalVelocity select 2) + random(10)*selectRandom [1,-1]
+					];
+				};				
+				
+				// 	Underbarrel Grenade
+				if ( _magazine in dzn_iwb_UGLRoundsList ) exitWith {					
+					_proj setVelocityModelSpace [
+						(_originalVelocity select 0) + (random 1.5) * selectRandom[1,-1]
+						, (_originalVelocity select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
+						, (_originalVelocity select 2)					
 					];
 				};
 				
@@ -289,7 +333,7 @@ dzn_fnc_iwb_HGAttack = {
 	
 	_u setVariable ["IWB_inSequence",true,true];
 	private _dir = _u getDir _tgt;
-	private _dist = _u distance _tgt;
+	private _dist = (_u distance _tgt) min 15;
 	
 	private _intersects = false;
 	private _posData = [eyePos _u, getPosASL _u];
@@ -339,6 +383,9 @@ dzn_fnc_iwb_HGAttack = {
 	
 	_u setVariable ["IWB_inSequence", false, true];	
 };
+
+
+
 
 dzn_fnc_iwb_Suppress = {
 	params["_u","_tgt"];	
@@ -397,6 +444,7 @@ dzn_fnc_iwb_SelectSuppressPos = {
 
 	_suppressPositions
 };
+
 
 dzn_fnc_iwb_DisableUnit = {
 	_this setVariable ["IWB_Running", false, true];
