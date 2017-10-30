@@ -2,8 +2,9 @@
 
 /*
  *	Infantry Weapon Behavior
- *	v.3.1
+ *	v.3.2
  */
+IWB_Version = "v.3.2";
 
 call compile preProcessFileLineNumbers "\dzn_IWB\IWB Functions.sqf";
 call compile preProcessFileLineNumbers "\dzn_IWB\ICB Functions.sqf";
@@ -31,7 +32,7 @@ call compile preProcessFileLineNumbers "\dzn_IWB\ICB Functions.sqf";
 			
 			{
 				_x setVariable ["IWB_Running", true];
-				_x execFSM "IWB.fsm";
+				_x execFSM "\dzn_IWB\IWB.fsm";
 				
 				sleep 1;
 			} forEach _allUnits;
