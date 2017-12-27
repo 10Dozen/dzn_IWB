@@ -32,4 +32,4 @@ Diagnostic:
 - T3 call BIS_fnc_enemyTargets
 - [T3,100] spawn BIS_fnc_traceBullets;
 - T3 call dzn_fnc_iwb_GetUnitCombatAttributes
-
+- format ["UGL: %1 | HG: %2 | MG: %3", V getVariable "IWB_UGL", V getVariable "IWB_HG", V getVariable "IWB_SW"]
