@@ -28,4 +28,8 @@ Task:
 Bugs/Features:
   - Suppress attack: Remeber last target and if no new targets and target alive and in range -> use as new target
 
+Diagnostic:
+- T3 call BIS_fnc_enemyTargets
+- [T3,100] spawn BIS_fnc_traceBullets;
+- T3 call dzn_fnc_iwb_GetUnitCombatAttributes
 
