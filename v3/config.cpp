@@ -1,4 +1,4 @@
-#include "BIS_AddonInfo.hpp"
+
 class CfgPatches
 {
 	class dzn_IWB
