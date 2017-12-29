@@ -41,7 +41,7 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 					, "_ammo"
 					, "_magazine"
 					, "_proj"
-					, "_gunner"			
+					, "_gunner"
 				];
 				
 				private _originalVelocity = velocityModelSpace _proj;
@@ -51,7 +51,7 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 					_proj setVelocityModelSpace [
 						(_originalVelocity select 0) + (random 1.5) * selectRandom[1,-1]
 						, (_originalVelocity select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
-						, (_originalVelocity select 2)					
+						, (_originalVelocity select 2)
 					];
 				};
 				
@@ -61,7 +61,6 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 					if (isNil { _unit getVariable "IWB_HG_TargetRange" }) exitWith {						
 						_unit addMagazine _magazine;
 						deleteVehicle _proj;
-						A_R pushBack "Deleted due to lack of Distance";
 					};
 				
 					private _proj = _this select 6;
@@ -69,19 +68,18 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 					private _velocity = [];
 					
 					if (_dist < 16) then {
-						_velocity = [random [-5,0,5], 8 + random [-0.75, 0, 0.75] ,10];
+						_velocity = [random [-3,0,3], 8 + random [-0.75, 0, 0.75] ,10];
 					} else {				
 						if (_dist < 23) then {
-							_velocity = [random [-5,0,5], 10 + random [-1, 0, 1],10]
+							_velocity = [random [-4,0,4], 10 + random [-1, 0, 1],10]
 						} else {
 							if (_dist < 30) then {
 								_velocity = [random [-5,0,5], 12 + random [-1.25, 0, 1.25],10]
 							} else {
-								_velocity = [random [-5,0,5], 16 + random [-1.25, 0, 1.5],10]
+								_velocity = [random [-6,0,6], 16 + random [-1.25, 0, 1.5],10]
 							};
 						};
 					};
-					A_R pushBack _velocity;
 					_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
 					
 					_unit setVariable ["IWB_HG_TargetRange", nil, true];
@@ -348,8 +346,11 @@ dzn_fnc_iwb_HGAttack = {
 	private _eyePos = eyePos _u;
 	private _uPos = getPosASL _u;
 	
-	// Check unit inside building (under the roof) and cancel attack OR check collisions in front of the target
-	if (lineIntersects [_eyePos, [_uPos select 0, _uPos select 1, (_uPos select 2) + 16], _u]) then {
+	// Check unit or target is inside building (under the roof) and cancel attack OR check collisions in front of the target
+	if (
+		lineIntersects [_eyePos, [_uPos select 0, (_uPos select 1), (_uPos select 2) + 16], _u]
+		|| lineIntersects [getPosASL _tgt, [(getPosASL _tgt) select 0, ((getPosASL _tgt) select 1), ((getPosASL _tgt) select 2) + 16], _tgt]
+	) then {
 		_intersects = true;
 	} else {
 		{
@@ -368,7 +369,6 @@ dzn_fnc_iwb_HGAttack = {
 	_u doWatch _tgt;
 	_u doTarget _tgt;
 	_u setVariable ["IWB_HG_TargetRange", _dist, true];
-	A_R pushBack [_tgt, _dist];
 	
 	private _cancelTimer = time + 1;	
 	waitUntil {
@@ -389,6 +389,7 @@ dzn_fnc_iwb_HGAttack = {
 		(_u getVariable "IWB_HGMuzzle")
 		, (_u getVariable "IWB_HGMuzzle")
 	];
+	_u remoteExec ["dzn_fnc_iwb_sayLocal", 0];
 	
 	sleep 1;	
 	_u selectWeapon (primaryWeapon _u);
@@ -465,4 +466,8 @@ dzn_fnc_iwb_DisableUnit = {
 dzn_fnc_iwb_EnableUnit = {
 	_this setVariable ["IWB_Running", false, true];
 	_this setVariable ["IWB_Disable", false, true];
+};
+
+dzn_fnc_iwb_sayLocal = {
+	_this say3d ["kambula", 40, 1];
 };
