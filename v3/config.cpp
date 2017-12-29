@@ -23,3 +23,15 @@ class Extended_PostInit_EventHandlers
 		init = "call ('\dzn_IWB\Init.sqf' call SLX_XEH_COMPILE)";
 	};
 };
+
+class CfgSounds
+{
+	sounds[] = {};
+	
+	class kambula
+	{
+		name = "";
+		sound[] = {"\dzn_IWB\sound\kambula.wss", 20, 1};
+		titles[] = {0,""};
+	};
+};
