@@ -2,18 +2,17 @@
 
 /*
  *	Infantry Weapon Behavior
- *	v.3.2
+ *	v.3.3
  */
-IWB_Version = "v.3.2";
+IWB_Version = "v.3.3";
 
 call compile preProcessFileLineNumbers "\dzn_IWB\IWB Functions.sqf";
 call compile preProcessFileLineNumbers "\dzn_IWB\ICB Functions.sqf";
 
-// if !(isServer) exitWith {};
+if !(isServer) exitWith {};
 
 [] spawn {
 	waitUntil { time > 0 };
-	
 	sleep 10;
 	
 	dzn_iwb_CheckUnits = true;

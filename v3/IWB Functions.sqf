@@ -41,10 +41,58 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 					, "_ammo"
 					, "_magazine"
 					, "_proj"
-					, "_gunner"			
+					, "_gunner"
 				];
 				
 				private _originalVelocity = velocityModelSpace _proj;
+				
+				// 	Underbarrel Grenade
+				if ( _magazine in dzn_iwb_UGLRoundsList ) exitWith {					
+					_proj setVelocityModelSpace [
+						(_originalVelocity select 0) + (random 1.5) * selectRandom[1,-1]
+						, (_originalVelocity select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
+						, (_originalVelocity select 2)
+					];
+				};
+				
+				// 	Hand Grenade 
+				if ( _magazine in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {
+					
+					if (isNil { _unit getVariable "IWB_HG_TargetRange" }) exitWith {						
+						_unit addMagazine _magazine;
+						deleteVehicle _proj;
+					};
+				
+					private _proj = _this select 6;
+					private _dist = _unit getVariable ["IWB_HG_TargetRange", 25];
+					private _velocity = [];
+					
+					if (_dist < 16) then {
+						_velocity = [random [-3,0,3], 8 + random [-0.75, 0, 0.75] ,10];
+					} else {				
+						if (_dist < 23) then {
+							_velocity = [random [-4,0,4], 10 + random [-1, 0, 1],10]
+						} else {
+							if (_dist < 30) then {
+								_velocity = [random [-5,0,5], 12 + random [-1.25, 0, 1.25],10]
+							} else {
+								_velocity = [random [-6,0,6], 16 + random [-1.25, 0, 1.5],10]
+							};
+						};
+					};
+					_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
+					
+					_unit setVariable ["IWB_HG_TargetRange", nil, true];
+				};
+				
+				// Suppressed
+				if (_unit getVariable ["ICB_Suppressed", false]) exitWith {
+					_proj setVelocityModelSpace [
+						(_originalVelocity select 0) + random(45)*selectRandom [1,-1]
+						, (_originalVelocity select 1) 
+						, (_originalVelocity select 2) + random(10)*selectRandom [1,-1]
+					];
+				};
 				
 				// Blind firing
 				private _intersectObjects = lineIntersectsObjs [
@@ -70,47 +118,6 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 						, (_originalVelocity select 2) + random(10)*selectRandom [1,-1]
 					];
 				};
-				
-				// Suppressed
-				if (_unit getVariable ["ICB_Suppressed", false]) then {
-					_proj setVelocityModelSpace [
-						(_originalVelocity select 0) + random(45)*selectRandom [1,-1]
-						, (_originalVelocity select 1) 
-						, (_originalVelocity select 2) + random(10)*selectRandom [1,-1]
-					];
-				};				
-				
-				// 	Underbarrel Grenade
-				if ( _magazine in dzn_iwb_UGLRoundsList ) exitWith {					
-					_proj setVelocityModelSpace [
-						(_originalVelocity select 0) + (random 1.5) * selectRandom[1,-1]
-						, (_originalVelocity select 1) + selectRandom [-15, -12, -10, -7, -5, -3, 0, 3, 5, 7, 10, 12, 15]
-						, (_originalVelocity select 2)					
-					];
-				};
-				
-				// 	Hand Grenade 
-				if ( (_this select 5) in (dzn_iwb_HGList apply {_x select 0}) ) exitWith {
-					private _proj = _this select 6;
-					private _dist = (_this select 0) getVariable ["IWB_HG_TargetRange", 15];
-					private _velocity = [];
-					
-					if (_dist < 16) then {
-						_velocity = [0,8 + random [-0.75, 0, 0.75] ,10];
-					} else {				
-						if (_dist < 23) then {
-							_velocity = [0,10 + random [-1, 0, 1],10]
-						} else {
-							if (_dist < 30) then {
-								_velocity = [0,12 + random [-1.25, 0, 1.25],10]
-							} else {
-								_velocity = [0,16 + random [-1.25, 0, 1.5],10]
-							};
-						};
-					};
-					
-					_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
-				};
 			}
 		];
 		_u setVariable ["IWB_FireEH", _eh];
@@ -119,7 +126,7 @@ dzn_fnc_IWB_ToggleHandGrenadeEH = {
 		_u setVariable ["IWB_FireEH", nil];
 	};
 };
-
+A_R = [];
 
 /* **************** */
 /* Functions
@@ -333,28 +340,35 @@ dzn_fnc_iwb_HGAttack = {
 	
 	_u setVariable ["IWB_inSequence",true,true];
 	private _dir = _u getDir _tgt;
-	private _dist = (_u distance _tgt) min 15;
+	private _dist = (_u distance _tgt) max 15;
 	
 	private _intersects = false;
-	private _posData = [eyePos _u, getPosASL _u];
+	private _eyePos = eyePos _u;
+	private _uPos = getPosASL _u;
 	
-	{
-		private _unitPos = _posData select 1;
-		private _xVal = (_unitPos select 0) + ((sin (_dir + _x)) * 5);
-		private _yVal = (_unitPos select 1) + ((cos (_dir + _x)) * 5);
-		
+	// Check unit or target is inside building (under the roof) and cancel attack OR check collisions in front of the target
+	if (
+		lineIntersects [_eyePos, [_uPos select 0, (_uPos select 1), (_uPos select 2) + 16], _u]
+		|| lineIntersects [getPosASL _tgt, [(getPosASL _tgt) select 0, ((getPosASL _tgt) select 1), ((getPosASL _tgt) select 2) + 16], _tgt]
+	) then {
+		_intersects = true;
+	} else {
 		{
-			if (lineIntersects [_posData select 0, [_xVal, _yVal, (_unitPos select 2) + _x], _u]) exitWith {
-				_intersects = true;
-			};			
-		} forEach [4,5];
-	} forEach [0, -1, 1];
+			private _xVal = (_uPos select 0) + ((sin (_dir + _x)) * 5);
+			private _yVal = (_uPos select 1) + ((cos (_dir + _x)) * 5);		
+			{
+				if (lineIntersects [_eyePos, [_xVal, _yVal, (_uPos select 2) + _x], _u]) exitWith {
+					_intersects = true;
+				};			
+			} forEach [4,5];
+		} forEach [0, -1, 1];
+	};
 	
 	if (_intersects) exitWith { _u setVariable ["IWB_inSequence", false, true];	 };
 
 	_u doWatch _tgt;
 	_u doTarget _tgt;
-	_u setVariable ["IWB_HG_TargetRange", _dist, true];	
+	_u setVariable ["IWB_HG_TargetRange", _dist, true];
 	
 	private _cancelTimer = time + 1;	
 	waitUntil {
@@ -375,6 +389,7 @@ dzn_fnc_iwb_HGAttack = {
 		(_u getVariable "IWB_HGMuzzle")
 		, (_u getVariable "IWB_HGMuzzle")
 	];
+	_u remoteExec ["dzn_fnc_iwb_sayLocal", 0];
 	
 	sleep 1;	
 	_u selectWeapon (primaryWeapon _u);
@@ -383,9 +398,6 @@ dzn_fnc_iwb_HGAttack = {
 	
 	_u setVariable ["IWB_inSequence", false, true];	
 };
-
-
-
 
 dzn_fnc_iwb_Suppress = {
 	params["_u","_tgt"];	
@@ -454,4 +466,8 @@ dzn_fnc_iwb_DisableUnit = {
 dzn_fnc_iwb_EnableUnit = {
 	_this setVariable ["IWB_Running", false, true];
 	_this setVariable ["IWB_Disable", false, true];
+};
+
+dzn_fnc_iwb_sayLocal = {
+	_this say3d ["kambula", 40, 1];
 };
