@@ -2,15 +2,18 @@
 Arma 3 Infantry Weapon Behaviour tweak
 
 ## v3.3
+- HandGrenade: AI don't throw greandes inside buildings (like hangars)
+- HandGrenade: Voice notification on throw
+- HandGrenade fixes
+
+## v3.2
 - UGL dispersion added
 - Target selection fixed (only current hostiles sides are used)
 - ACE compatibility (surrendered, handcuffed) 
 - CBA_Settings compatible
 - Add UGL dispersion
 
-Bugs/Features:
-  - HandGrenade: AI throws greandes inside hangars
-  - Suppress attack: Remeber last target and if no new targets and target alive and in range -> use as new target
+
 
 Diagnostic:
 - T3 call BIS_fnc_enemyTargets
