@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="dzn_IWCB">
+	<Package name="dzn_IWCB">
+ 		<Container name="Menus">
+			
+			<!--- 
+				OVERALL
+			-->
+			<Key ID="STR_IWB_HG_Category">
+				<Original>Infantry Weapon Behavior - Hand Grenades</Original>
+				<Russian>Infantry Weapon Behavior - Ручные гранаты</Russian>
+			</Key>
+			<Key ID="STR_IWB_UGL_Category">
+				<Original>Infantry Weapon Behavior - Underbarrel Grenade Launchers</Original>
+				<Russian>Infantry Weapon Behavior - Подствольный гранатомет</Russian>
+			</Key>
+			<Key ID="STR_IWB_SW_Category">
+				<Original>Infantry Weapon Behavior - Suppression</Original>
+				<Russian>Infantry Weapon Behavior - Подавление</Russian>
+			</Key>
+			<Key ID="STR_IWB_Timers_Category">
+				<Original>Infantry Weapon Behavior - Timers</Original>
+				<Russian>Infantry Weapon Behavior - Таймеры</Russian>
+			</Key>
+		
+			<Key ID="STR_IWB_Low">
+				<Original>Low</Original>
+				<Russian>Низкая</Russian>
+			</Key>
+			<Key ID="STR_IWB_Average">
+				<Original>Average</Original>
+				<Russian>Средняя</Russian>
+			</Key>
+			<Key ID="STR_IWB_High">
+				<Original>High</Original>
+				<Russian>Высокая</Russian>
+			</Key>
+		
+		
+			<!--- 
+				IWB 
+			-->
+			<Key ID="STR_IWB_Enabled">
+				<Original>Enabled</Original>
+				<Russian>Включено</Russian>
+			</Key>
+			<Key ID="STR_IWB_Enabled_desc">
+				<Original>IWB handles using of hand grenades, UGL and suppression fire by AI. Use unit setVariable ["dzn_IWCB_IWB_Disable", true, true] to prevent adding IWB behavior to unit</Original>
+				<Russian>IWB добавляет использование ИИ-юнитами ручных гранат, подствольных гранатометов и огня на подавления. Используйте unit setVariable ["dzn_IWCB_IWB_Disable", true, true] чтобы не применять поведение IWB к этому юниту</Russian>
+			</Key>
+		
+		
+			
+			
+			
+			
+			
+			<Key ID="STR_IWB_SpecialAttackChance">
+				<Original>Overall attack chance</Original>
+				<Russian>Общий шанс атаки</Russian>
+			</Key>
+			<Key ID="STR_IWB_SpecialAttackChance_desc">
+				<Original>Overall chance of attack using grenades, UGL or suppress fire</Original>
+				<Russian>Общий шанс на атаку с использованием гранат, подствольника или огня на подавления</Russian>
+			</Key>	
+		
+		
+			<!--- 
+				HAND GRENADE SECTION
+			-->
+			<Key ID="STR_HG_Allowed">
+				<Original>Hand Grenades allowed</Original>
+				<Russian>Ручные гранаты разрешены</Russian>
+			</Key>
+			
+			<Key ID="STR_HG_Chance">
+				<Original>Attack chance/Original>
+				<Russian>Шанс на атаку</Russian>
+			</Key>
+			<Key ID="STR_HG_Chance_desc">
+				<Original>Chance of attack using Hand grenade. Resulting attack chance is affected by Overall attack chance.</Original>
+				<Russian>Шанс на атаку ручными гранатами. Итоговый шанс атаки зависит от Общего шанса атаки</Russian>
+			</Key>	
+		
+			<Key ID="STR_HG_RangeSetting">
+				<Original>Attack range, meters</Original>
+				<Russian>Дистанция атаки, метры</Russian>
+			</Key>
+			<Key ID="STR_HG_RangeSetting_desc">
+				<Original>Range of attack using Hand grenades in format "@Minimum-@Maximum" (e.g. "15-35")</Original>
+				<Russian>Дистанция атаки ручными гранатами в формате "@Minimum-@Maximum" (например "15-35")</Russian>
+			</Key>	
+			
+			<Key ID="STR_HG_Accuracy">
+				<Original>Attack accuracy</Original>
+				<Russian>Точность атаки</Russian>
+			</Key>
+			<Key ID="STR_HG_Accuracy_desc">
+				<Original>Hand grenade attack accuracy. Be aware, when grenade miss one player, it still may hit other!</Original>
+				<Russian>Точность атаки ручными гранатами. Имейте ввиду, что не попав по одному игроку, атака может случайно попасть по другому!</Russian>
+			</Key>	
+			
+			<Key ID="STR_HG_ListSetting">
+				<Original>Grenades classlist</Original>
+				<Russian>Список классов гранат</Russian>
+			</Key>
+			<Key ID="STR_HG_ListSetting_desc">
+				<Original>Classlist of hand grenades (can be found in "magazines player" command output). Add only attack grenades - frag, flashbang, incendiary, etc.</Original>
+				<Russian>Список классов ручных гранат (классы можно получить из вывода "magazines player"). Добавляйте только боевые гранаты - осколочные, светошумовые, зажигательные и т.п.</Russian>
+			</Key>	
+			
+			
+			<!--- 
+				UGL SECTION
+			-->
+			<Key ID="STR_UGL_Allowed">
+				<Original>UGL allowed</Original>
+				<Russian>ГП разрешены</Russian>
+			</Key>
+			
+			<Key ID="STR_UGL_Chance">
+				<Original>Attack chance/Original>
+				<Russian>Шанс на атаку</Russian>
+			</Key>
+			<Key ID="STR_UGL_Chance_desc">
+				<Original>Chance of attack using UGL. Resulting attack chance is affected by Overall attack chance.</Original>
+				<Russian>Шанс на атаку подствольным гарнатометом. Итоговый шанс атаки зависит от Общего шанса атаки</Russian>
+			</Key>	
+		
+			<Key ID="STR_UGL_RangeSetting">
+				<Original>Attack range, meters</Original>
+				<Russian>Дистанция атаки, метры</Russian>
+			</Key>
+			<Key ID="STR_UGL_RangeSetting_desc">
+				<Original>Range of attack using UGL in format "@Minimum-@Maximum" (e.g. "15-35")</Original>
+				<Russian>Дистанция атаки подствольным гранатометом в формате "@Minimum-@Maximum" (например "15-35")</Russian>
+			</Key>	
+			
+			<Key ID="STR_UGL_Accuracy">
+				<Original>Attack accuracy</Original>
+				<Russian>Точность атаки</Russian>
+			</Key>
+			<Key ID="STR_UGL_Accuracy_desc">
+				<Original>UGL attack accuracy. Be aware, when grenade miss one player, it still may hit other!</Original>
+				<Russian>Точность атаки подствольным гранатометом. Имейте ввиду, что не попав по одному игроку, атака может случайно попасть по другому!</Russian>
+			</Key>	
+			
+			<Key ID="STR_UGL_ListSetting">
+				<Original>UGL Rounds classlist</Original>
+				<Russian>Список классов гранат</Russian>
+			</Key>
+			<Key ID="STR_UGL_ListSetting_desc">
+				<Original>Classlist of UGL grenades (can be found in "magazines player" command output)</Original>
+				<Russian>Список классов гранат для подствольника (классы можно получить из вывода "magazines player")</Russian>
+			</Key>	
+			
+			
+			<!--- 
+				SUPPRESS SECTION
+			-->
+			<Key ID="STR_SW_Allowed">
+				<Original>Suppress attack allowed</Original>
+				<Russian>Огонь на подавление разрешен</Russian>
+			</Key>
+			<Key ID="STR_SW_Allowed_desc">
+				<Original>Suppressive fire over enemy or cover. Applies to weapons with magazine of more than 30 rounds</Original>
+				<Russian>Огонь на подавление по противнику или по укрытию. Применяется для оружия с магазином более 30 выстрелов.</Russian>
+			</Key>
+			
+			<Key ID="STR_SW_Chance">
+				<Original>Attack chance/Original>
+				<Russian>Шанс на атаку</Russian>
+			</Key>
+			<Key ID="STR_SW_Chance_desc">
+				<Original>Chance of suppression attack. Resulting attack chance is affected by Overall attack chance.</Original>
+				<Russian>Шанс атаки на подавление. Итоговый шанс атаки зависит от Общего шанса атаки</Russian>
+			</Key>	
+			
+			<Key ID="STR_SW_RangeSetting">
+				<Original>Attack range, meters</Original>
+				<Russian>Дистанция атаки, метры</Russian>
+			</Key>
+			<Key ID="STR_SW_RangeSetting_desc">
+				<Original>Range of suppressive attack in format "@Minimum-@Maximum" (e.g. "15-35")</Original>
+				<Russian>Дистанция атаки на подавление в формате "@Minimum-@Maximum" (например "15-35")</Russian>
+			</Key>	
+			
+			
+			
+			<!--- 
+				ICB SECTION
+			-->
+		
+			<Key ID="STR_ICB_Enabled">
+				<Original>Enabled</Original>
+				<Russian>Включено</Russian>
+			</Key>
+			<Key ID="STR_ICB_Enabled_desc">
+				<Original>ICB handles AI reactions on incoming fire: force unit to find cover, suffer skill and accuracy penalty on suppression. Use unit setVariable ["dzn_IWCB_ICB_Disable", true, true] to prevent adding ICB behavior to unit</Original>
+				<Russian>ICB обеспечивает реакцию ИИ на огонь в свою сторону: заставляет юнитов занимать укрытия, снижение навыка и точности огня при подавлении. Используйте unit setVariable ["dzn_IWCB_ICB_Disable", true, true] чтобы не применять поведение ICB к этому юниту</Russian>
+			</Key>	
+			
+			<Key ID="STR_ICB_AllowSuppressed">
+				<Original>Allow suppressed state</Original>
+				<Russian>Разрешить состояние подавления</Russian>
+			</Key>
+			<Key ID="STR_ICB_AllowSuppressed_desc">
+				<Original>Suppressed units suffer great accuracy and skill penalty</Original>
+				<Russian>Подавленные юниты получают значительный штраф к точности и навыкам</Russian>
+			</Key>	
+			
+			<Key ID="STR_ICB_AllowFindCover">
+				<Original>Allow force find cover</Original>
+				<Russian>Разрешить поиск укрытий</Russian>
+			</Key>
+			
+			
+			
+			<!--- 
+				TIMERS SECTION
+			-->
+			<Key ID="STR_CheckUnitLoopTimeout">
+				<Original>New unit check timeout, sec</Original>
+				<Russian>Таймаут проверки юнитов, сек</Russian>
+			</Key>
+			<Key ID="STR_CheckUnitLoopTimeout_desc">
+				<Original>Timeout between checking and adding IWB/ICB effects to units in the mission</Original>
+				<Russian>Периодичность проверки и добавления эффектов IWB/ICB на юнитов в миссии</Russian>
+			</Key>	
+			
+			<Key ID="STR_IWB_SpecialAttackLongTimeout">
+				<Original>IWB main loop timeout, sec</Original>
+				<Russian>Основной таймаут IWB, сек</Russian>
+			</Key>
+			<Key ID="STR_IWB_SpecialAttackLongTimeout_desc">
+				<Original>Timeout of IWB behavior main loop. If performance is OK - don't touch this parameter</Original>
+				<Russian>Таймаут основного цикла поведения IWB. Если с производительностью все в порядке - оставьте этот параметр в покое</Russian>
+			</Key>	
+			
+			<Key ID="STR_IWB_SpecialAttackShortTimeout">
+				<Original>Attack repreat timeout, sec</Original>
+				<Russian>Таймаут повторной атаки, сек</Russian>
+			</Key>
+			<Key ID="STR_IWB_SpecialAttackShortTimeout_desc">
+				<Original>Approximate timeout between special attacks</Original>
+				<Russian>Приблизительный минимальный таймаут между двумя атаками</Russian>
+			</Key>
+		</Container>
+	</Package>
+</Project>
