@@ -49,12 +49,6 @@
 				<Russian>IWB добавляет использование ИИ-юнитами ручных гранат, подствольных гранатометов и огня на подавления. Используйте unit setVariable ["dzn_IWCB_IWB_Disable", true, true] чтобы не применять поведение IWB к этому юниту</Russian>
 			</Key>
 		
-		
-			
-			
-			
-			
-			
 			<Key ID="STR_IWB_SpecialAttackChance">
 				<Original>Overall attack chance</Original>
 				<Russian>Общий шанс атаки</Russian>
