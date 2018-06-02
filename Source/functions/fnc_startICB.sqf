@@ -4,7 +4,7 @@
 	input: OBJECT - unit
 	returns: none
 	exmple:
-		_unit call dzn_IWCB_fnc_startIWB;
+		_unit spawn dzn_IWCB_fnc_startICB;
 */
 #include "..\macro.hpp"
 

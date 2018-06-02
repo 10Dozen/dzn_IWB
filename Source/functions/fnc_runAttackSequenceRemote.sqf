@@ -4,15 +4,15 @@
 	input: ARRAY - 0: (OBJECT) Unit, 1: (OBJECT) Target, 2: (STRING) Attack type
 	returns: nothing
 	exmple:
-		[_unit, _tgtParams, "UGL"] call dzn_IWCB_fnc_runAttackSequenceRemote
+		[_unit, _tgt, "UGL"] call dzn_IWCB_fnc_runAttackSequenceRemote
 */
-
+#include "..\macro.hpp"
 params ["_u", "_tgt", "_sequenceName"];
 	
 private _seqFunction = switch toUpper(_sequenceName) do {
-	case "UGL": { SVAR(fnc_UGLAttack) };
-	case "HG": { SVAR(fnc_HGAttack) };
-	case "SW": { SVAR(fnc_SWAttack) };
+	case "UGL": { SVAR(fnc_attackByUGL) };
+	case "HG": { SVAR(fnc_attackByHG) };
+	case "SW": { SVAR(fnc_attackBySW) };
 };
 	
 [_u, _tgt] remoteExec [_seqFunction, _u];	

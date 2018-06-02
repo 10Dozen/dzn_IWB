@@ -10,7 +10,7 @@
 #include "..\macro.hpp"
 
 params [
-	"_u"
+	"_unit"
 	, "_weapon"
 	, "_muzzle"
 	, "_mode"
@@ -28,12 +28,15 @@ private _originalVelocity = velocityModelSpace _proj;
 //	Adds dispersion to UGL shots to make them inaccurate
 // ===================================
 if ( _magazine in GVAR(UGL_List) ) exitWith {
+	XC_Log = [];
+	XC_Log pushBack format ["UGL Started"];
+	
 	private _yWeighted = [];
 	private _xMultiplier = 0;
 	
 	switch (GVAR(UGL_Accuracy)) do {
 		case 0: {
-			_xMultiplier = 4;
+			_xMultiplier = 15;
 			_yWeighted = [1,2,2,3,3,4,3];			
 		};
 		case 1: {
@@ -45,15 +48,29 @@ if ( _magazine in GVAR(UGL_List) ) exitWith {
 			_xMultiplier = 1.25;
 		};	
 	};
+	
+	XC_Log pushBack format ["Accuracy modification: X: %1, Y: %2", _xMultiplier, _yWeighted];
 
 	private _xDisp = random (_xMultiplier) * selectRandom[1,-1];
-	private _yDisp = ([0,3,5,7,10,12,15] selectRandomWeighted _weighted) * selectRandom[1,-1]; 
+	private _yDisp = ([0,3,5,7,10,12,15] selectRandomWeighted _yWeighted) * selectRandom[1,-1]; 
+	
+	XC_Log pushBack format ["Dispersionn: XDisp: %1, YDisp: %2", _xDisp, _yDisp];
+	XC_Log pushBack format ["Result:[%1, %2, %3]", (_originalVelocity select 0) + _xDisp, (_originalVelocity select 1) + _yDisp, (_originalVelocity select 2)];
 	
 	_proj setVelocityModelSpace [
 		(_originalVelocity select 0) + _xDisp
 		, (_originalVelocity select 1) + _yDisp
 		, (_originalVelocity select 2)
 	];
+	
+	/*
+	[
+		"UGL Started"
+		,"Accuracy modification: X: 4, Y: [1,2,2,3,3,4,3]"
+		,"Dispersionn: XDisp: 2.07959, YDisp: -15"
+		,"Result:[2.07959, 65, 3.8147e-006]"
+	]
+	*/
 };
 
 
@@ -62,6 +79,7 @@ if ( _magazine in GVAR(UGL_List) ) exitWith {
 //	Change thrown grenade trajectory to parabolic (over obstacles) and dependent on target distance
 // ===================================
 if ( _magazine in (GVAR(HG_List) apply {_x select 0}) ) exitWith {
+	
 	if (isNil { _unit getVariable SVAR(HG_TargetRange) }) exitWith {						
 		_unit addMagazine _magazine;
 		deleteVehicle _proj;
@@ -71,6 +89,7 @@ if ( _magazine in (GVAR(HG_List) apply {_x select 0}) ) exitWith {
 	private _velocity = [];
 	
 	private _xDisp = 1;
+	private _yDisp = 1;
 	private _yMultiplier = 1;
 	private _yDistance = 1;
 	
@@ -108,6 +127,9 @@ if ( _magazine in (GVAR(HG_List) apply {_x select 0}) ) exitWith {
 	
 	_proj setVelocity ((_proj modelToWorldVisual _velocity) vectorDiff (_proj modelToWorldVisual [0,0,0]));
 	_unit setVariable [SVAR(HG_TargetRange), nil, true];
+	
+	// Play Grenade warning sound
+	_unit remoteExec [SVAR(fnc_sayLocal), 0];
 };
 
 

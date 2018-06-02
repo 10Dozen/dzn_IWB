@@ -21,13 +21,15 @@ private _add = {
 };
 
 
-#define	CAT_NOEX(X)			"No Expression", X
+#define	CAT_NOEX(X)		"No Expression", X
 #define	IWB_GENERAL_CAT		"Infantry Weapon Behavior"
-#define	IWB_HG_CAT			localize "STR_IWB_HG_Category"
-#define	IWB_UGL_CAT			localize "STR_IWB_UGL_Category"
-#define	IWB_SW_CAT			localize "STR_IWB_SW_Category"
-#define	IWB_T_CAT			localize "STR_IWB_Timers_Category"
+#define	IWB_HG_CAT		localize "STR_IWCB_IWB_HG_Category"
+#define	IWB_UGL_CAT		localize "STR_IWCB_IWB_UGL_Category"
+#define	IWB_SW_CAT		localize "STR_IWCB_IWB_SW_Category"
+#define	IWB_T_CAT			localize "STR_IWCB_IWB_Timers_Category"
 #define	ICB_GENERAL_CAT		"Infantry Combat Behavior"
+#define	ACCURACY_LIST		[[0,1,2], [localize "STR_IWCB_IWB_Low", localize "STR_IWCB_IWB_Average", localize "STR_IWCB_IWB_High"], 1]
+
 
 #define	IWB_HG_LIST \
 HandGrenade\
@@ -106,14 +108,14 @@ HandGrenade\
 	"HG_RangeSetting"
 	, "EDITBOX"
 	, "15-35"
-	, { [SVAR(HG_Range), _this] call GVAR(fnc_updateTimeoutSetting); }
+	, { [SVAR(HG_Range), _this] call GVAR(fnc_updateRangedValues); }
 	, IWB_HG_CAT
 ] call _add;
 
 [
 	"HG_Accuracy"
 	, "LIST"
-	, [[0,1,2], ["STR_IWB_Low", "STR_IWB_Average", "STR_IWB_Average"], 1]
+	, ACCURACY_LIST
 	, CAT_NOEX(IWB_HG_CAT)
 ] call _add;
 
@@ -146,14 +148,14 @@ HandGrenade\
 	"UGL_RangeSetting"
 	, "EDITBOX"
 	, "35-350"
-	, { [SVAR(UGL_Range), _this] call GVAR(fnc_updateTimeoutSetting); }
+	, { [SVAR(UGL_Range), _this] call GVAR(fnc_updateRangedValues); }
 	, IWB_UGL_CAT
 ] call _add;
 
 [
 	"UGL_Accuracy"
 	, "LIST"
-	, [[0,1,2], ["STR_IWB_Low", "STR_IWB_Average", "STR_IWB_Average"], 1]
+	, ACCURACY_LIST
 	, CAT_NOEX(IWB_UGL_CAT)
 ] call _add;
 
@@ -186,7 +188,7 @@ HandGrenade\
 	"SW_RangeSetting"
 	, "EDITBOX"
 	, "35-500"
-	, { [SVAR(SW_Range), _this] call GVAR(fnc_updateTimeoutSetting); }
+	, { [SVAR(SW_Range), _this] call GVAR(fnc_updateRangedValues); }
 	, IWB_SW_CAT
 ] call _add;
 
@@ -224,16 +226,19 @@ HandGrenade\
 	"CheckUnitLoopTimeout"
 	, "SLIDER"
 	, [1,600,45,0]
+	, CAT_NOEX(IWB_T_CAT)
 ] call _add;
 
 [
 	"IWB_SpecialAttackLongTimeout"
 	, "SLIDER"
 	, [1,600,40,0]
+	, CAT_NOEX(IWB_T_CAT)
 ] call _add;
 
 [
 	"IWB_SpecialAttackShortTimeout"
 	, "SLIDER"
 	, [1,600,15,0]
+	, CAT_NOEX(IWB_T_CAT)
 ] call _add;

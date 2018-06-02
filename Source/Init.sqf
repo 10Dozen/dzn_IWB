@@ -1,3 +1,10 @@
+/*
+	U1 call dzn_IWCB_fnc_getUnitCombatAttributes;
+	[U1, true] call dzn_IWCB_fnc_toggleFiredEH;
+	
+	[U2, player, "HG"] call dzn_IWCB_fnc_runAttackSequenceRemote
+*/
+
 enableSaving [false,false];
 
 #include "macro.hpp"
@@ -10,7 +17,7 @@ GVAR(Version) 	= "v.1";
 
 // Variables
 GVAR(HG_Range) 	= [0,0];
-GVAR(UGL_Range) 	= [0,0];
+GVAR(UGL_Range) = [0,0];
 GVAR(SW_Range) 	= [0,0];
 
 GVAR(HG_List) 	= [];
@@ -21,6 +28,7 @@ GVAR(UGL_List) 	= [];
 
 if !(isServer) exitWith {};
 
+/*
 [] spawn {
 	waitUntil { time > 0 };
 	waitUntil { GVAR(IWB_Enabled) || GVAR(ICB_Enabled) };
@@ -53,3 +61,4 @@ if !(isServer) exitWith {};
 		sleep GVAR(CheckUnitLoopTimeout);
 	};
 };
+*/
